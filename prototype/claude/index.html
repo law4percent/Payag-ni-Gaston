@@ -981,9 +981,9 @@
                         <input type="time" value="08:00" required>
                     </div>
                     <div class="form-group">
-                        <label>Number of Guests (Base: 10 persons)</label>
+                        <label>Total Number of Guests</label>
                         <input type="number" id="guestCount" value="10" min="1" max="50" required onchange="calculateTotal()">
-                        <small style="color: #666;" id="guestNote">💡 For groups under 10, we offer per-person pricing automatically!</small>
+                        <small style="color: #666;" id="guestNote">💡 Base plan includes 10 guests. Extra guests charged separately.</small>
                     </div>
                     
                     <!-- Show this section only if guests <= 10 -->
@@ -992,13 +992,16 @@
                         <p style="margin: 0.5rem 0; color: #666; font-size: 0.95rem;" id="smallGroupDetails"></p>
                     </div>
 
-                    <div class="form-group" id="extraGuestsSection">
-                        <label>Extra Adults (beyond 10)</label>
-                        <input type="number" id="extraAdults" value="0" min="0" max="40" onchange="calculateTotal()">
+                    <!-- Auto-calculated extras notice -->
+                    <div id="autoExtraNotice" style="display: none; background: #fff3cd; padding: 1rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #ff6b35;">
+                        <strong style="color: #856404;">📊 Auto-Calculated Extras</strong>
+                        <p style="margin: 0.5rem 0; color: #666; font-size: 0.95rem;" id="autoExtraDetails"></p>
                     </div>
+
                     <div class="form-group" id="extraKidsSection">
-                        <label>Extra Kids (beyond base)</label>
+                        <label>Extra Kids (optional, not counted in total guests above)</label>
                         <input type="number" id="extraKids" value="0" min="0" max="20" onchange="calculateTotal()">
+                        <small style="color: #666;">₱150 per kid</small>
                     </div>
                     
                     <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
@@ -1372,47 +1375,72 @@
             }
 
             const basePlanPrice = currentPlanPrice;
-            const guestCount = parseInt(document.getElementById('guestCount').value) || 10;
+            const totalGuests = parseInt(document.getElementById('guestCount').value) || 10;
             
             // SMART PRICING: If guests < 10, use per-person rate
             let planPrice = basePlanPrice;
             let isSmallGroup = false;
             let perPersonRate = 0;
+            let autoExtraAdults = 0;
             
-            if (guestCount < 10 && basePlanPrice > 0) {
+            if (totalGuests < 10 && basePlanPrice > 0) {
+                // SMALL GROUP PRICING
                 isSmallGroup = true;
                 perPersonRate = Math.round(basePlanPrice / 10);
-                planPrice = guestCount * perPersonRate;
+                planPrice = totalGuests * perPersonRate;
                 
                 // Show small group notice
                 document.getElementById('smallGroupNotice').style.display = 'block';
                 document.getElementById('smallGroupDetails').innerHTML = `
-                    You're paying <strong>₱${perPersonRate.toLocaleString()} per person</strong> × ${guestCount} guests = <strong>₱${planPrice.toLocaleString()}</strong><br>
+                    You're paying <strong>₱${perPersonRate.toLocaleString()} per person</strong> × ${totalGuests} guests = <strong>₱${planPrice.toLocaleString()}</strong><br>
                     <span style="font-size: 0.85rem;">(Regular price: ₱${basePlanPrice.toLocaleString()} for 10 people)</span>
                 `;
                 
-                // Hide extra guest fields for small groups
-                document.getElementById('extraGuestsSection').style.display = 'none';
+                // Hide notices and extra kids
+                document.getElementById('autoExtraNotice').style.display = 'none';
                 document.getElementById('extraKidsSection').style.display = 'none';
-                document.getElementById('extraAdults').value = 0;
                 document.getElementById('extraKids').value = 0;
-            } else {
+                
+            } else if (totalGuests >= 10 && basePlanPrice > 0) {
+                // LARGE GROUP - AUTO CALCULATE EXTRAS
+                isSmallGroup = false;
+                planPrice = basePlanPrice; // Base plan for 10 people
+                autoExtraAdults = totalGuests - 10; // Guests beyond 10
+                
                 // Hide small group notice
                 document.getElementById('smallGroupNotice').style.display = 'none';
-                document.getElementById('extraGuestsSection').style.display = 'block';
+                
+                // Show auto-calculation notice
+                if (autoExtraAdults > 0) {
+                    document.getElementById('autoExtraNotice').style.display = 'block';
+                    document.getElementById('autoExtraDetails').innerHTML = `
+                        Your total of <strong>${totalGuests} guests</strong> includes:<br>
+                        • Base 10 guests (included in plan)<br>
+                        • <strong>${autoExtraAdults} extra adults</strong> @ ₱250 each = ₱${(autoExtraAdults * 250).toLocaleString()}
+                    `;
+                } else {
+                    document.getElementById('autoExtraNotice').style.display = 'none';
+                }
+                
+                // Show extra kids section
+                document.getElementById('extraKidsSection').style.display = 'block';
+                
+            } else {
+                // No plan selected yet
+                document.getElementById('smallGroupNotice').style.display = 'none';
+                document.getElementById('autoExtraNotice').style.display = 'none';
                 document.getElementById('extraKidsSection').style.display = 'block';
             }
 
-            const extraAdults = parseInt(document.getElementById('extraAdults').value) || 0;
+            // Calculate add-ons
+            const extraAdultsPrice = autoExtraAdults * 250; // Auto-calculated from total guests
             const extraKids = parseInt(document.getElementById('extraKids').value) || 0;
-            const kayakHours = parseInt(document.getElementById('kayakHours').value) || 0;
-            const extraTables = parseInt(document.getElementById('extraTables').value) || 0;
-            const extraChairs = parseInt(document.getElementById('extraChairs').value) || 0;
-
-            const extraAdultsPrice = extraAdults * 250;
             const extraKidsPrice = extraKids * 150;
+            const kayakHours = parseInt(document.getElementById('kayakHours').value) || 0;
             const kayakPrice = kayakHours * 150;
+            const extraTables = parseInt(document.getElementById('extraTables').value) || 0;
             const tablesPrice = extraTables * 100;
+            const extraChairs = parseInt(document.getElementById('extraChairs').value) || 0;
             const chairsPrice = extraChairs * 25;
 
             const totalPrice = planPrice + extraAdultsPrice + extraKidsPrice + kayakPrice + tablesPrice + chairsPrice;
@@ -1425,16 +1453,16 @@
             
             let planLabelText = planText;
             if (isSmallGroup) {
-                planLabelText += ` (${guestCount} guests × ₱${perPersonRate})`;
+                planLabelText += ` (${totalGuests} guests × ₱${perPersonRate})`;
             }
             
             document.getElementById('planLabel').textContent = planLabelText;
             document.getElementById('planPrice').textContent = `₱${planPrice.toLocaleString()}`;
 
-            // Extra adults
-            if (extraAdults > 0) {
+            // Extra adults (auto-calculated)
+            if (autoExtraAdults > 0) {
                 document.getElementById('extraAdultsRow').style.display = 'flex';
-                document.getElementById('extraAdultsLabel').textContent = `Extra Adults (${extraAdults} × ₱250)`;
+                document.getElementById('extraAdultsLabel').textContent = `Extra Adults (${autoExtraAdults} × ₱250)`;
                 document.getElementById('extraAdultsPrice').textContent = `₱${extraAdultsPrice.toLocaleString()}`;
             } else {
                 document.getElementById('extraAdultsRow').style.display = 'none';
