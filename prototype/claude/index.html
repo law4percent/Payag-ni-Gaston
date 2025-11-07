@@ -716,6 +716,19 @@
 
             </div>
 
+            <!-- Small Group / Custom Pricing Notice -->
+            <div style="background: linear-gradient(135deg, #7b1fa2, #9c27b0); color: white; padding: 2rem; border-radius: 15px; margin: 2rem 0; text-align: center;">
+                <h3 style="font-size: 1.6rem; margin-bottom: 1rem;">🤔 Small Group or Special Requirements?</h3>
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem; opacity: 0.95;">
+                    <strong>Less than 10 guests?</strong> We offer per-person pricing!<br>
+                    <strong>Confused about pricing?</strong> Let's discuss a custom package for you.
+                </p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button class="cta-btn" onclick="showCustomPricing()" style="background: white; color: #7b1fa2;">💬 Request Custom Pricing</button>
+                    <button class="cta-btn" onclick="showSmallGroupInfo()" style="background: rgba(255,255,255,0.2); border: 2px solid white;">📋 Small Group Rates</button>
+                </div>
+            </div>
+
             <!-- Add-ons Section -->
             <div style="background: #f5f5f5; padding: 2rem; border-radius: 15px; margin: 3rem 0;">
                 <h3 style="color: #0077be; font-size: 1.8rem; margin-bottom: 1.5rem;">✨ Optional Add-ons (Pay-as-you-go)</h3>
@@ -754,6 +767,100 @@
             </div>
 
         </section>
+    </div>
+
+    <!-- Custom Pricing Request Modal -->
+    <div id="customPricingModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeCustomPricingModal()">&times;</button>
+            
+            <h2>💬 Request Custom Pricing</h2>
+            <p style="color: #666; margin-bottom: 2rem;">Tell us about your group and needs. Our owner will contact you with a personalized package!</p>
+            
+            <form onsubmit="submitCustomPricingRequest(event)">
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" required placeholder="Juan Dela Cruz">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="tel" required placeholder="09XX XXX XXXX">
+                </div>
+                <div class="form-group">
+                    <label>Number of Guests</label>
+                    <input type="number" required placeholder="How many people?" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Preferred Date Range</label>
+                    <input type="text" placeholder="e.g., December 15-17, 2025">
+                </div>
+                <div class="form-group">
+                    <label>Special Requirements / Questions</label>
+                    <textarea style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 5px; font-family: inherit; resize: vertical;" rows="5" required placeholder="Tell us about your needs: &#10;- Small group pricing? &#10;- Special occasion (birthday, company outing)?&#10;- Extended stay (multiple days)?&#10;- Special amenities needed?&#10;- Budget constraints?"></textarea>
+                </div>
+                
+                <div style="background: #fff3cd; padding: 1rem; border-radius: 5px; margin: 1rem 0;">
+                    <small style="color: #856404;">
+                        <strong>What to expect:</strong><br>
+                        • Owner will review your request within 24 hours<br>
+                        • You'll receive a custom quote via email/SMS<br>
+                        • No obligation - free consultation!
+                    </small>
+                </div>
+                
+                <button type="submit" class="btn-primary">Submit Request</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Small Group Info Modal -->
+    <div id="smallGroupModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeSmallGroupModal()">&times;</button>
+            
+            <h2>📋 Small Group Rates</h2>
+            <p style="color: #666; margin-bottom: 2rem;">Perfect for intimate gatherings! Pay only for your group size.</p>
+            
+            <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem;">
+                <h3 style="color: #0077be; margin-bottom: 1rem;">How It Works</h3>
+                <p style="color: #666; line-height: 1.8;">
+                    For groups with <strong>less than 10 people</strong>, we calculate pricing based on <strong>per-person rates</strong>:
+                </p>
+            </div>
+
+            <div style="display: grid; gap: 1rem; margin-bottom: 2rem;">
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #42a5f5;">
+                    <h4 style="color: #42a5f5;">Basic Stay</h4>
+                    <p style="font-size: 1.3rem; color: #0077be; margin: 0.5rem 0;"><strong>₱600 per person</strong></p>
+                    <p style="color: #666; font-size: 0.9rem;">Example: 5 guests = 5 × ₱600 = <strong>₱3,000</strong></p>
+                </div>
+
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #0077be;">
+                    <h4 style="color: #0077be;">Standard Escape</h4>
+                    <p style="font-size: 1.3rem; color: #0077be; margin: 0.5rem 0;"><strong>₱850 per person</strong></p>
+                    <p style="color: #666; font-size: 0.9rem;">Example: 7 guests = 7 × ₱850 = <strong>₱5,950</strong></p>
+                </div>
+
+                <div style="background: white; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ef6c00;">
+                    <h4 style="color: #ef6c00;">Premium Exclusive</h4>
+                    <p style="font-size: 1.3rem; color: #0077be; margin: 0.5rem 0;"><strong>₱1,000 per person</strong></p>
+                    <p style="color: #666; font-size: 0.9rem;">Example: 6 guests = 6 × ₱1,000 = <strong>₱6,000</strong></p>
+                </div>
+            </div>
+
+            <div style="background: #e8f5e9; padding: 1rem; border-radius: 8px; border-left: 4px solid #4caf50;">
+                <strong style="color: #2e7d32;">✓ All amenities still included!</strong>
+                <p style="color: #666; margin: 0.5rem 0; font-size: 0.9rem;">
+                    Kitchen, comfort rooms, tables, chairs, beach access - everything you need for a perfect stay.
+                </p>
+            </div>
+
+            <button class="btn-primary" onclick="closeSmallGroupModal(); showLogin();" style="margin-top: 1.5rem;">Book Now with Small Group Rate</button>
+        </div>
     </div>
 
     <!-- Auth Modal -->
@@ -876,13 +983,20 @@
                     <div class="form-group">
                         <label>Number of Guests (Base: 10 persons)</label>
                         <input type="number" id="guestCount" value="10" min="1" max="50" required onchange="calculateTotal()">
-                        <small style="color: #666;">Additional guests: ₱250/adult, ₱150/kid</small>
+                        <small style="color: #666;" id="guestNote">💡 For groups under 10, we offer per-person pricing automatically!</small>
                     </div>
-                    <div class="form-group">
+                    
+                    <!-- Show this section only if guests <= 10 -->
+                    <div id="smallGroupNotice" style="display: none; background: #e3f2fd; padding: 1rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #0077be;">
+                        <strong style="color: #0077be;">💰 Small Group Pricing Applied!</strong>
+                        <p style="margin: 0.5rem 0; color: #666; font-size: 0.95rem;" id="smallGroupDetails"></p>
+                    </div>
+
+                    <div class="form-group" id="extraGuestsSection">
                         <label>Extra Adults (beyond 10)</label>
                         <input type="number" id="extraAdults" value="0" min="0" max="40" onchange="calculateTotal()">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" id="extraKidsSection">
                         <label>Extra Kids (beyond base)</label>
                         <input type="number" id="extraKids" value="0" min="0" max="20" onchange="calculateTotal()">
                     </div>
@@ -1257,7 +1371,38 @@
                 }
             }
 
-            const planPrice = currentPlanPrice;
+            const basePlanPrice = currentPlanPrice;
+            const guestCount = parseInt(document.getElementById('guestCount').value) || 10;
+            
+            // SMART PRICING: If guests < 10, use per-person rate
+            let planPrice = basePlanPrice;
+            let isSmallGroup = false;
+            let perPersonRate = 0;
+            
+            if (guestCount < 10 && basePlanPrice > 0) {
+                isSmallGroup = true;
+                perPersonRate = Math.round(basePlanPrice / 10);
+                planPrice = guestCount * perPersonRate;
+                
+                // Show small group notice
+                document.getElementById('smallGroupNotice').style.display = 'block';
+                document.getElementById('smallGroupDetails').innerHTML = `
+                    You're paying <strong>₱${perPersonRate.toLocaleString()} per person</strong> × ${guestCount} guests = <strong>₱${planPrice.toLocaleString()}</strong><br>
+                    <span style="font-size: 0.85rem;">(Regular price: ₱${basePlanPrice.toLocaleString()} for 10 people)</span>
+                `;
+                
+                // Hide extra guest fields for small groups
+                document.getElementById('extraGuestsSection').style.display = 'none';
+                document.getElementById('extraKidsSection').style.display = 'none';
+                document.getElementById('extraAdults').value = 0;
+                document.getElementById('extraKids').value = 0;
+            } else {
+                // Hide small group notice
+                document.getElementById('smallGroupNotice').style.display = 'none';
+                document.getElementById('extraGuestsSection').style.display = 'block';
+                document.getElementById('extraKidsSection').style.display = 'block';
+            }
+
             const extraAdults = parseInt(document.getElementById('extraAdults').value) || 0;
             const extraKids = parseInt(document.getElementById('extraKids').value) || 0;
             const kayakHours = parseInt(document.getElementById('kayakHours').value) || 0;
@@ -1277,7 +1422,13 @@
             // Update summary
             const planSelect = document.getElementById('planSelect');
             const planText = planSelect.options[planSelect.selectedIndex]?.text || 'Select a plan';
-            document.getElementById('planLabel').textContent = planText;
+            
+            let planLabelText = planText;
+            if (isSmallGroup) {
+                planLabelText += ` (${guestCount} guests × ₱${perPersonRate})`;
+            }
+            
+            document.getElementById('planLabel').textContent = planLabelText;
             document.getElementById('planPrice').textContent = `₱${planPrice.toLocaleString()}`;
 
             // Extra adults
@@ -1328,6 +1479,28 @@
             document.getElementById('downPayment').textContent = `₱${downPayment.toLocaleString()}`;
             document.getElementById('remainingBalance').textContent = `₱${remainingBalance.toLocaleString()}`;
             document.getElementById('totalAmount').textContent = `₱${totalPrice.toLocaleString()}`;
+        }
+
+        function showCustomPricing() {
+            document.getElementById('customPricingModal').classList.add('active');
+        }
+
+        function closeCustomPricingModal() {
+            document.getElementById('customPricingModal').classList.remove('active');
+        }
+
+        function showSmallGroupInfo() {
+            document.getElementById('smallGroupModal').classList.add('active');
+        }
+
+        function closeSmallGroupModal() {
+            document.getElementById('smallGroupModal').classList.remove('active');
+        }
+
+        function submitCustomPricingRequest(event) {
+            event.preventDefault();
+            alert('✅ Custom Pricing Request Submitted!\n\nThank you! Gaston (the owner) will review your request and contact you within 24 hours with a personalized quote.\n\nCheck your email and SMS for updates!');
+            closeCustomPricingModal();
         }
 
         function scrollToFeatures() {
