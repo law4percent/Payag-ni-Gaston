@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payag ni Gaston - Exclusive Beach Resort</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles to handle the modal display without JavaScript */
+        .modal {
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease-in-out;
+        }
+        .modal:target {
+            visibility: visible;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Set Inter as the primary font */
+        html {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom scrollbar style for the main body */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #4B5563; /* Dark Gray */
+            border-radius: 4px;
+        }
+        body::-webkit-scrollbar-track {
+            background-color: #F3F4F6; /* Light Gray */
+        }
+
+        /* Custom color palette for a tropical feel */
+        .bg-payag-teal { background-color: #008080; } /* Primary Teal */
+        .text-payag-teal { color: #008080; }
+        .bg-payag-sand { background-color: #F5E5C9; } /* Light Sand */
+        .text-payag-sand { color: #F5E5C9; }
+        .border-payag-teal { border-color: #008080; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'payag-teal': '#008080',
+                        'payag-sand': '#F5E5C9',
+                        'payag-wood': '#6F4E37',
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+    <!-- 1. LANDING PAGE & AMENITIES SECTION -->
+    <main id="landing-page" class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+        <!-- Hero Section -->
+        <header class="relative overflow-hidden rounded-xl shadow-2xl h-96 mb-12">
+            <!-- Image Placeholder: Sea View -->
+            <img src="https://placehold.co/1200x500/008080/FFFFFF?text=Payag+ni+Gaston%0AExclusive+Beach+Resort+View"
+                 alt="Panoramic view of Payag ni Gaston resort and beach"
+                 class="w-full h-full object-cover">
+
+            <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center p-4">
+                <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-4 tracking-tighter">
+                    Payag ni Gaston
+                </h1>
+                <p class="text-xl text-payag-sand mb-8 font-light italic">
+                    Your Exclusive 24-Hour Island Escape
+                </p>
+                <!-- BOOK NOW Button - Links to the Booking Modal -->
+                <a href="#booking-modal"
+                   class="bg-payag-sand text-payag-teal hover:bg-white hover:shadow-xl transition duration-300
+                          font-bold py-3 px-8 rounded-full text-lg uppercase tracking-wider shadow-lg">
+                    Book Your Exclusive Date Now
+                </a>
+            </div>
+        </header>
+
+        <!-- Resort Details Grid -->
+        <section class="mb-12">
+            <h2 class="text-4xl font-bold text-gray-800 mb-8 border-b-2 border-payag-teal pb-2">
+                Amenities & Experience
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Detail Card 1: Cottage -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl">
+                    <img src="https://placehold.co/400x250/6F4E37/FFFFFF?text=The+Cottage" alt="Cottage" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-payag-teal mb-2">Exclusive Cottage</h3>
+                        <p class="text-gray-600">A cozy, native 'payag' for your group. Fully air-conditioned main room and spacious living area.</p>
+                    </div>
+                </div>
+                <!-- Detail Card 2: Kitchen & Dining -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl">
+                    <img src="https://placehold.co/400x250/A3C1AD/FFFFFF?text=Kitchen+%26+Dining" alt="Kitchen" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-payag-teal mb-2">Complete Kitchen</h3>
+                        <p class="text-gray-600">Equipped with a refrigerator, stove, and basic cooking utensils. Bring your own ingredients!</p>
+                    </div>
+                </div>
+                <!-- Detail Card 3: The Beach & Kayak -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden transition hover:shadow-xl">
+                    <img src="https://placehold.co/400x250/2C7A7B/FFFFFF?text=Beach+%26+Kayak" alt="Beach and Kayak" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-2xl font-semibold text-payag-teal mb-2">Private Beachfront</h3>
+                        <p class="text-gray-600">Enjoy the sea view, kayak usage, and the spectacular night sky, all exclusively yours for 24 hours.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Policy Section -->
+        <section class="bg-white p-8 rounded-xl shadow-xl">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">The 24-Hour Exclusive Policy</h2>
+            <ul class="space-y-3 text-gray-700 list-disc pl-5">
+                <li>**Check-In:** 8:00 AM</li>
+                <li>**Check-Out:** 8:00 AM the following day.</li>
+                <li>**Exclusive Use:** Your reservation grants exclusive access to the entire resort premises for the entire 24-hour period.</li>
+                <li>**Payment:** A down payment is required to confirm the booking. The remaining balance is due upon arrival.</li>
+            </ul>
+        </section>
+    </main>
+
+    <!-- 2. BOOKING MODAL (Date Selection & Details) -->
+    <div id="booking-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-80 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-xl shadow-2xl p-6 md:p-8 transform transition-all overflow-y-auto max-h-[90vh]">
+
+            <div class="flex justify-between items-start border-b pb-4 mb-4">
+                <h2 class="text-3xl font-bold text-payag-teal">1. Select Your Date</h2>
+                <!-- Close Button - Links back to the Landing Page -->
+                <a href="#landing-page" class="text-gray-400 hover:text-gray-700 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </a>
+            </div>
+
+            <!-- Date Selection Card -->
+            <div class="mb-6">
+                <label for="check-in-date" class="block text-lg font-medium text-gray-700 mb-2">
+                    Select Check-In Date (8:00 AM)
+                </label>
+                <!-- Placeholder for Calendar Input -->
+                <input type="date" id="check-in-date" value="2025-12-25"
+                       class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3 text-lg">
+                <p class="mt-2 text-sm text-gray-500">Check-out will automatically be 8:00 AM on the following day (Dec 26).</p>
+            </div>
+
+            <!-- Availability & Price Simulation -->
+            <div class="p-4 bg-payag-sand/50 border-l-4 border-payag-teal rounded-lg mb-6">
+                <p class="font-semibold text-lg text-gray-800 flex items-center">
+                    <svg class="w-5 h-5 mr-2 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path></svg>
+                    Date is **Available!**
+                </p>
+                <p class="text-sm text-gray-600 mt-1">Status confirmed for 24-hour exclusive use.</p>
+            </div>
+
+            <!-- Booking Details Form (Placeholder) -->
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">2. Reservation Details</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                <div>
+                    <label for="guests" class="block text-md font-medium text-gray-700">Number of Guests (Max 15)</label>
+                    <input type="number" id="guests" value="5" min="1" max="15"
+                           class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                </div>
+                <div>
+                    <label for="addons" class="block text-md font-medium text-gray-700">Add-ons (Optional)</label>
+                    <select id="addons" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                        <option>None</option>
+                        <option>Extra Kayak Rental (+₱500)</option>
+                        <option>Grill Setup & Charcoal (+₱300)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Summary & Pricing -->
+            <div class="p-6 bg-gray-50 rounded-xl mb-6 border-t border-b">
+                <h4 class="text-xl font-semibold text-gray-800 mb-3">Total Cost Summary</h4>
+                <div class="flex justify-between py-1 text-gray-600">
+                    <span>Base Rate (24 Hrs)</span>
+                    <span>₱6,000.00</span>
+                </div>
+                <div class="flex justify-between py-1 text-gray-600">
+                    <span>Add-ons (Kayak)</span>
+                    <span>₱500.00</span>
+                </div>
+                <div class="flex justify-between py-2 text-xl font-bold border-t mt-2 text-payag-teal">
+                    <span>Total Amount Due</span>
+                    <span>₱6,500.00</span>
+                </div>
+                <div class="flex justify-between py-2 text-sm font-semibold text-red-600">
+                    <span>Required Down Payment (50%)</span>
+                    <span>₱3,250.00</span>
+                </div>
+            </div>
+
+
+            <!-- Proceed to Authentication Button - Links to Auth Modal -->
+            <a href="#auth-modal"
+               class="w-full block text-center bg-payag-teal text-white hover:bg-payag-wood transition duration-300
+                      font-bold py-3 px-4 rounded-full text-xl uppercase tracking-wider">
+                Proceed to Authentication & Payment
+            </a>
+        </div>
+    </div>
+
+
+    <!-- 3. AUTHENTICATION MODAL (Login/Sign-up) -->
+    <div id="auth-modal" class="modal fixed inset-0 z-50 bg-gray-900 bg-opacity-80 flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-xl shadow-2xl p-8 transform transition-all">
+
+            <div class="flex justify-between items-start border-b pb-4 mb-6">
+                <h2 class="text-3xl font-bold text-gray-800">Login to Continue</h2>
+                <!-- Close Button - Links back to the Booking Modal -->
+                <a href="#booking-modal" class="text-gray-400 hover:text-gray-700 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </a>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label for="login-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="your.email@example.com"
+                           class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                </div>
+                <div>
+                    <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="login-password" required placeholder="••••••••"
+                           class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                </div>
+
+                <button type="submit"
+                        class="w-full bg-payag-teal text-white hover:bg-payag-wood font-bold py-3 px-4 rounded-full transition duration-300 uppercase tracking-wider">
+                    Log In
+                </button>
+            </form>
+
+            <div class="mt-6 pt-6 border-t border-gray-200 text-center">
+                <p class="text-gray-600 mb-3">Don't have an account yet?</p>
+                <!-- Sign Up Button -->
+                <button type="button"
+                        class="w-full border border-payag-teal text-payag-teal hover:bg-payag-teal hover:text-white font-bold py-3 px-4 rounded-full transition duration-300 uppercase tracking-wider">
+                    Create New Account
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

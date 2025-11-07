@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payag ni Gaston - Flexible Booking & Pricing</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Set Inter as the primary font */
+        html { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+
+        /* Custom color palette for a professional, branded feel */
+        .bg-payag-teal { background-color: #008080; } /* Primary Teal */
+        .text-payag-teal { color: #008080; }
+        .border-payag-teal { border-color: #008080; }
+        .bg-payag-sand { background-color: #F5E5C9; } /* Light Sand */
+        .text-payag-wood { color: #6F4E37; }
+        .bg-payag-gold { background-color: #FFD700; } /* Gold for POPULAR badge */
+
+        /* View Management */
+        #pricing-page { display: block; }
+        #booking-form, #custom-agreement-view { display: none; }
+
+        /* Use :target to switch views (for SPA-like routing) */
+        body:has(#booking:target) #pricing-page { display: none; }
+        body:has(#booking:target) #booking-form { display: block; }
+
+        /* Responsive adjustments for pricing cards */
+        @media (min-width: 1024px) {
+            #pricing-cards > div { height: 100%; }
+        }
+
+        /* Style for the featured card */
+        .featured-card {
+            transform: scale(1.05);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            border-width: 4px;
+            border-style: solid;
+        }
+
+        /* Custom Agreement Styling */
+        .agreement-box {
+            border: 1px solid #ddd;
+            padding: 2rem;
+            background: white;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        /* Print styling for the agreement */
+        @media print {
+            body { background: white; }
+            header, nav, footer, #booking-form { display: none !important; }
+            #custom-agreement-view { display: block !important; margin: 0; padding: 0; }
+            .agreement-box { border: none; box-shadow: none; padding: 0; }
+            .no-print { display: none !important; }
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'payag-teal': '#008080',
+                        'payag-sand': '#F5E5C9',
+                        'payag-wood': '#6F4E37',
+                        'payag-gold': '#FFD700',
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white shadow-md sticky top-0 z-10 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <h1 class="text-3xl font-extrabold text-payag-teal">Payag ni Gaston</h1>
+            <nav class="space-x-4">
+                <a href="#pricing" class="text-payag-teal hover:text-payag-wood font-medium">Pricing</a>
+                <a href="#add-ons" class="text-payag-teal hover:text-payag-wood font-medium">Add-ons</a>
+                <a href="#booking" class="bg-payag-teal text-white py-2 px-4 rounded-full hover:bg-payag-wood transition duration-150 shadow-lg">Book Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="pricing-page" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <h2 class="text-5xl font-extrabold text-gray-900 mb-4">Choose Your Perfect Stay</h2>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">Flexible plans and transparent pricing to match your group size and budget. **Note: All base rates are for exclusive cottage rental, covering up to 10 guests.**</p>
+        </div>
+
+        <section id="pricing" class="mb-16">
+            <div id="pricing-cards" class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-center">
+
+                <div class="bg-white rounded-xl shadow-xl p-8 transition duration-300 hover:shadow-2xl h-full">
+                    <h3 class="text-2xl font-bold mb-2 text-gray-800">Basic Stay</h3>
+                    <p class="text-sm text-gray-500 mb-6">Cottage A (Small) - Perfect for smaller groups.</p>
+                    <p class="text-5xl font-extrabold text-payag-teal mb-4">
+                        ₱6,000
+                        <span class="text-base font-normal text-gray-500">/ day</span>
+                    </p>
+                    <ul class="text-gray-600 space-y-3 mb-8">
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Exclusive use of Cottage A</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Up to 10 Guests (Adults/Kids)</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Kitchen & BBQ Access</li>
+                        <li class="flex items-center text-red-500"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Add-ons charged separately</li>
+                    </ul>
+                    <a href="#booking" onclick="selectPlan('basic')" class="block text-center bg-payag-teal text-white py-3 rounded-full hover:bg-payag-wood transition duration-200 font-semibold shadow-md">Select Basic Plan</a>
+                </div>
+
+                <div id="standard-card" class="bg-payag-sand rounded-xl shadow-2xl p-10 featured-card border-payag-teal relative h-full">
+                    <span class="absolute top-0 right-0 -mt-3 -mr-3 bg-red-600 text-white text-xs font-bold uppercase py-1 px-3 rounded-full shadow-lg transform rotate-3">
+                        ⭐ POPULAR
+                    </span>
+                    <h3 class="text-3xl font-bold mb-2 text-gray-900">Standard Escape</h3>
+                    <p class="text-sm text-gray-600 mb-6">Cottage B (Large) - Slightly larger and better amenities.</p>
+                    <p class="text-6xl font-extrabold text-payag-wood mb-4">
+                        ₱8,500
+                        <span class="text-lg font-normal text-gray-600">/ day</span>
+                    </p>
+                    <ul class="text-gray-700 space-y-3 mb-8">
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Exclusive use of Cottage B (Large)</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Up to 10 Guests (Adults/Kids)</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Dedicated Lounge Area</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> **One hour Kayak rental included**</li>
+                    </ul>
+                    <a href="#booking" onclick="selectPlan('standard')" class="block text-center bg-payag-wood text-white py-4 rounded-full hover:bg-payag-teal transition duration-200 font-bold shadow-lg">Select Standard Plan</a>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-xl p-8 transition duration-300 hover:shadow-2xl h-full">
+                    <h3 class="text-2xl font-bold mb-2 text-gray-800">Premium Exclusive</h3>
+                    <p class="text-sm text-gray-500 mb-6">Cottage A + B - Maximum space and flexibility.</p>
+                    <p class="text-5xl font-extrabold text-payag-teal mb-4">
+                        ₱10,000
+                        <span class="text-base font-normal text-gray-500">/ day</span>
+                    </p>
+                    <ul class="text-gray-600 space-y-3 mb-8">
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Exclusive use of **BOTH** Cottages</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Up to 10 Guests (Adults/Kids)</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> All amenities included</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> **Priority Booking Status**</li>
+                    </ul>
+                    <a href="#booking" onclick="selectPlan('premium')" class="block text-center bg-payag-teal text-white py-3 rounded-full hover:bg-payag-wood transition duration-200 font-semibold shadow-md">Select Premium Plan</a>
+                </div>
+
+                <div class="bg-payag-sand/50 rounded-xl shadow-xl p-8 transition duration-300 hover:shadow-2xl h-full border-2 border-dashed border-payag-wood">
+                    <h3 class="text-2xl font-bold mb-2 text-payag-wood">Small Group / Custom</h3>
+                    <p class="text-sm text-gray-600 mb-6">For groups 1-10 guests looking for a discount, or special long-term requests.</p>
+                    <p class="text-5xl font-extrabold text-payag-wood mb-4">
+                        <span class="text-2xl">Negotiated</span>
+                        <span class="text-base font-normal text-gray-500">/ agreement</span>
+                    </p>
+                    <ul class="text-gray-700 space-y-3 mb-8">
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-payag-wood" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Best rate for ≤ 10 Guests</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-payag-wood" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Long-term stay quotes</li>
+                        <li class="flex items-center"><svg class="w-5 h-5 mr-2 text-payag-wood" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> Direct owner negotiation</li>
+                        <li class="flex items-center text-red-500"><svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg> Requires Owner Approval</li>
+                    </ul>
+                    <a href="#booking" onclick="selectPlan('custom')" class="block text-center bg-payag-wood text-white py-3 rounded-full hover:bg-payag-teal transition duration-200 font-semibold shadow-md">Start Custom Inquiry</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="add-ons" class="mt-16 pt-10 border-t border-gray-200">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6 text-center">Flexible Add-Ons (Pay-As-You-Go)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+
+                <div class="bg-white rounded-xl shadow-md p-5 flex items-center space-x-4 border border-payag-sand">
+                    <span class="text-3xl">🛶</span>
+                    <div>
+                        <p class="font-semibold text-gray-800">Kayak Rental</p>
+                        <p class="text-sm text-payag-teal font-medium">₱150 / hour</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-5 flex items-center space-x-4 border border-payag-sand">
+                    <span class="text-3xl">🪑</span>
+                    <div>
+                        <p class="font-semibold text-gray-800">Extra Table</p>
+                        <p class="text-sm text-payag-teal font-medium">₱100 / piece</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-5 flex items-center space-x-4 border border-payag-sand">
+                    <span class="text-3xl">🪑</span>
+                    <div>
+                        <p class="font-semibold text-gray-800">Extra Chair</p>
+                        <p class="text-sm text-payag-teal font-medium">₱25 / piece</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-5 flex items-center space-x-4 border border-payag-sand">
+                    <span class="text-3xl">👨‍👩‍👧</span>
+                    <div>
+                        <p class="font-semibold text-gray-800">Extra Adult (Over 10 pax)</p>
+                        <p class="text-sm text-payag-teal font-medium">₱250 / person</p>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-5 flex items-center space-x-4 border border-payag-sand">
+                    <span class="text-3xl">👶</span>
+                    <div>
+                        <p class="font-semibold text-gray-800">Extra Kid (Over 10 pax)</p>
+                        <p class="text-sm text-payag-teal font-medium">₱150 / child</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="text-center mt-10">
+                <a href="#" class="text-sm text-gray-500 hover:text-payag-teal underline">View Full Booking & Cancellation Policy</a>
+            </div>
+        </section>
+
+    </main>
+
+    <section id="booking-form" class="py-16 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <a href="#pricing" class="text-sm text-payag-teal hover:text-payag-wood font-medium flex items-center mb-6 no-print">
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            Back to Plans
+        </a>
+        <h2 class="text-4xl font-bold text-payag-teal mb-8">Confirm Your Reservation</h2>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 bg-white p-6 md:p-8 rounded-xl shadow-xl">
+                <form id="reservation-form" onsubmit="event.preventDefault(); alert('Booking submitted! Total due: ' + document.getElementById('total-amount-display').textContent)">
+                    <h3 class="text-2xl font-semibold mb-6 text-gray-800">1. Select Plan & Guests</h3>
+                    
+                    <div class="mb-6 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                        <label for="guest-count" class="block text-sm font-medium text-gray-700 mb-1">Total Number of Guests (Adults + Kids)</label>
+                        <input type="number" id="guest-count" min="1" value="10" oninput="checkGuestCountAndSwitchMode()" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                        <p class="text-xs text-gray-600 mt-1" id="guest-count-message">Base plans cover **up to 10** guests. Guests over 10 incur extra charges (see Add-ons).</p>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label for="plan-selector" class="block text-sm font-medium text-gray-700 mb-1">Selected Plan</label>
+                        <select id="plan-selector" onchange="calculatePrice()" class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3 bg-payag-sand/50 font-semibold text-payag-teal">
+                            <option value="standard" data-rate="8500" selected>Standard Escape (Cottage B) - ₱8,500</option>
+                            <option value="basic" data-rate="6000">Basic Stay (Cottage A) - ₱6,000</option>
+                            <option value="premium" data-rate="10000">Premium Exclusive (A+B) - ₱10,000</option>
+                            <option value="custom" data-rate="0">Small Group / Custom Needs Inquiry or Agreement</option>
+                        </select>
+                        <p class="text-xs text-gray-500 mt-1" id="plan-message">⭐ POPULAR Choice! Base rate is for exclusive cottage rental (Up to 10 pax).</p>
+                    </div>
+
+                    <div id="custom-inquiry-section" class="hidden bg-red-50 border border-red-300 p-4 rounded-lg mb-8">
+                        <h4 class="text-xl font-bold text-red-700 mb-3">Custom Pricing Agreement (CPA) Center</h4>
+                        <p class="text-red-600 mb-4" id="inquiry-status-message">
+                            **New Inquiry:** Please provide details below (e.g., number of adults/kids, duration, desired discount). The owner will send a Custom Price Quote & Agreement ID after review.
+                        </p>
+
+                        <div id="inquiry-input-fields">
+                            <textarea id="custom-request-details" rows="4" placeholder="Example: We are only 4 adults and 1 child, booking for 3 nights. Can we get a small group discount?" class="w-full rounded-lg border-red-300 p-3 focus:border-red-500 focus:ring-red-500"></textarea>
+                            <p class="text-sm text-red-600 mt-2">Owner's Contact: **+63 917 XXX XXXX** | Email: **owner@payag.com** (Simulated contact info)</p>
+                        </div>
+                        
+                        <div id="agreement-id-check" class="mt-4">
+                            <h5 class="font-semibold text-gray-700 mb-2">Have your Agreement ID?</h5>
+                            <div class="flex space-x-2">
+                                <input type="text" id="agreement-id-input" placeholder="Enter Agreement ID (e.g., CPA-1025)" class="flex-grow rounded-lg border-gray-300 p-3 focus:border-payag-teal focus:ring-payag-teal">
+                                <button type="button" onclick="generateAgreement()" class="bg-payag-teal text-white py-3 px-6 rounded-lg hover:bg-payag-wood transition duration-150 font-semibold">
+                                    Load Agreement
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="standard-booking-fields">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                            <div>
+                                <label for="checkin-date" class="block text-sm font-medium text-gray-700">Check-in Date</label>
+                                <input type="date" id="checkin-date" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                            </div>
+                            <div>
+                                <label for="checkout-date" class="block text-sm font-medium text-gray-700">Check-out Date</label>
+                                <input type="date" id="checkout-date" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                            </div>
+                        </div>
+
+                        <h3 class="text-2xl font-semibold mb-6 text-gray-800 border-t pt-6">2. Pay-As-You-Go Add-ons (Up to 10 guests included)</h3>
+
+                        <div id="add-ons-inputs" class="space-y-4">
+                            <div class="flex items-center space-x-4 bg-gray-50 p-3 rounded-lg">
+                                <span class="text-2xl">👨‍👩‍👧</span>
+                                <div class="flex-1">
+                                    <label for="extra-adults" class="block text-sm font-medium text-gray-700">Extra Adults (Over 10 pax) (₱250/person)</label>
+                                </div>
+                                <input type="number" id="extra-adults" min="0" value="0" data-rate="250" data-unit="person" oninput="calculatePrice()"
+                                    class="w-20 text-center rounded-lg border-gray-300 focus:border-payag-teal focus:ring-payag-teal p-2">
+                                <span class="w-20 text-right font-medium text-payag-teal" id="extra-adults-total">₱0</span>
+                            </div>
+
+                            <div class="flex items-center space-x-4 bg-gray-50 p-3 rounded-lg">
+                                <span class="text-2xl">👶</span>
+                                <div class="flex-1">
+                                    <label for="extra-kids" class="block text-sm font-medium text-gray-700">Extra Kids (Over 10 pax) (₱150/child)</label>
+                                </div>
+                                <input type="number" id="extra-kids" min="0" value="0" data-rate="150" data-unit="child" oninput="calculatePrice()"
+                                    class="w-20 text-center rounded-lg border-gray-300 focus:border-payag-teal focus:ring-payag-teal p-2">
+                                <span class="w-20 text-right font-medium text-payag-teal" id="extra-kids-total">₱0</span>
+                            </div>
+
+                            <div class="flex items-center space-x-4 bg-gray-50 p-3 rounded-lg">
+                                <span class="text-2xl">🛶</span>
+                                <div class="flex-1">
+                                    <label for="kayak-hours" class="block text-sm font-medium text-gray-700">Kayak Rental (₱150/hour)</label>
+                                </div>
+                                <input type="number" id="kayak-hours" min="0" value="0" data-rate="150" data-unit="hour" oninput="calculatePrice()"
+                                    class="w-20 text-center rounded-lg border-gray-300 focus:border-payag-teal focus:ring-payag-teal p-2">
+                                <span class="w-20 text-right font-medium text-payag-teal" id="kayak-hours-total">₱0</span>
+                            </div>
+
+                            <div class="flex items-center space-x-4 bg-gray-50 p-3 rounded-lg">
+                                <span class="text-2xl">🪑</span>
+                                <div class="flex-1">
+                                    <label for="extra-tables" class="block text-sm font-medium text-gray-700">Extra Tables (₱100/piece)</label>
+                                </div>
+                                <input type="number" id="extra-tables" min="0" value="0" data-rate="100" data-unit="piece" oninput="calculatePrice()"
+                                    class="w-20 text-center rounded-lg border-gray-300 focus:border-payag-teal focus:ring-payag-teal p-2">
+                                <span class="w-20 text-right font-medium text-payag-teal" id="extra-tables-total">₱0</span>
+                            </div>
+
+                            <div class="flex items-center space-x-4 bg-gray-50 p-3 rounded-lg">
+                                <span class="text-2xl">🪑</span>
+                                <div class="flex-1">
+                                    <label for="extra-chairs" class="block text-sm font-medium text-gray-700">Extra Chairs (₱25/piece)</label>
+                                </div>
+                                <input type="number" id="extra-chairs" min="0" value="0" data-rate="25" data-unit="piece" oninput="calculatePrice()"
+                                    class="w-20 text-center rounded-lg border-gray-300 focus:border-payag-teal focus:ring-payag-teal p-2">
+                                <span class="w-20 text-right font-medium text-payag-teal" id="extra-chairs-total">₱0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-2xl font-semibold mb-6 text-gray-800 border-t pt-6 mt-8">3. Contact Information</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label for="client-name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                            <input type="text" id="client-name" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                        </div>
+                        <div>
+                            <label for="client-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                            <input type="email" id="client-email" required class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="lg:col-span-1">
+                <div id="calculator-summary" class="bg-payag-teal text-white p-6 md:p-8 rounded-xl shadow-2xl sticky top-24">
+                    <h3 class="text-2xl font-bold mb-4 border-b border-payag-sand/50 pb-3">Booking Summary</h3>
+
+                    <div class="space-y-3 mb-6">
+                        <div class="flex justify-between items-center text-lg">
+                            <span class="font-medium">Plan Rate:</span>
+                            <span id="plan-rate-display" class="font-bold text-payag-sand">₱8,500</span>
+                        </div>
+                        <div class="flex justify-between items-center text-lg border-t border-payag-sand/30 pt-3">
+                            <span class="font-medium">Add-ons Subtotal:</span>
+                            <span id="addons-subtotal-display" class="font-bold text-payag-sand">₱0</span>
+                        </div>
+                        <div class="flex justify-between items-center text-2xl pt-4 border-t border-payag-sand">
+                            <span class="font-extrabold">TOTAL AMOUNT:</span>
+                            <span id="total-amount-display" class="font-extrabold text-payag-gold">₱8,500</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-payag-sand text-gray-800 p-4 rounded-lg space-y-2 mb-6">
+                        <p class="font-semibold text-lg text-payag-teal">Payment Required:</p>
+                        <div class="flex justify-between">
+                            <span class="text-sm">50% Down Payment:</span>
+                            <span id="down-payment-display" class="font-bold text-lg text-red-600">₱4,250</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-sm">Remaining Balance (Due on Arrival):</span>
+                            <span id="remaining-balance-display" class="font-bold text-lg text-green-700">₱4,250</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" form="reservation-form" class="w-full bg-payag-gold text-payag-wood py-3 rounded-full hover:bg-yellow-400 transition duration-200 font-extrabold text-lg shadow-xl">
+                        CONFIRM BOOKING & PAY DOWN PAYMENT
+                    </button>
+                    <p class="text-xs text-center text-payag-sand mt-3">By clicking, you agree to the booking terms.</p>
+                </div>
+
+                <button type="button" id="custom-submit-button" onclick="handleCustomSubmit()" class="hidden w-full bg-red-600 text-white py-3 rounded-full hover:bg-red-700 transition duration-200 font-extrabold text-lg shadow-xl sticky top-24 mt-8">
+                    SEND CUSTOM BOOKING INQUIRY
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <section id="custom-agreement-view" class="py-16 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center mb-6 no-print">
+            <h2 class="text-3xl font-bold text-payag-teal">Custom Pricing Agreement</h2>
+            <button onclick="window.print()" class="bg-gray-200 text-gray-700 py-2 px-4 rounded-lg hover:bg-gray-300 flex items-center transition duration-150">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-5a2 2 0 00-2-2H5a2 2 0 00-2 2v5a2 2 0 002 2h2m0 0V9a2 2 0 012-2h4a2 2 0 012 2v8m-11 5h10a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 002 2z"></path></svg>
+                Print & Sign
+            </button>
+        </div>
+        
+        <div id="agreement-content" class="agreement-box shadow-2xl">
+            </div>
+
+        <div id="agreement-payment-footer" class="no-print mt-8 text-center">
+            <button onclick="alert('Proceeding to Custom Payment Gateway...')" class="w-full max-w-xs bg-payag-gold text-payag-wood py-4 rounded-full hover:bg-yellow-400 transition duration-200 font-extrabold text-xl shadow-xl">
+                PAY 50% CUSTOM DOWN PAYMENT
+            </button>
+            <p class="text-sm text-gray-500 mt-3">Total Due: <span id="agreement-total-display"></span></p>
+        </div>
+
+    </section>
+
+    <script>
+        // Constants for rates
+        const PLAN_RATES = {
+            'basic': 6000,
+            'standard': 8500,
+            'premium': 10000,
+            'custom': 0 // Rate is zero for custom inquiry/agreement
+        };
+        
+        // This is a dummy database of accepted custom agreements (simulating owner input)
+        const CPA_DATABASE = {
+            'CPA-1025': {
+                rate: 3500, // Small group discount for 2 nights
+                guests: '4 Adults, 1 Child',
+                details: 'Small group rate for 2 nights, utilizing only Cottage A. Total 5 pax.',
+                duration: '2 nights' // IMPORTANT: Duration must be specified for CPA
+            },
+            'CPA-1101': {
+                rate: 15000, // Large group premium
+                guests: '15 Adults, 5 Children',
+                details: 'Large group booking (20 pax) for 1 night, utilizing both cottages.',
+                duration: '1 night'
+            }
+        };
+
+        const ADDON_ELEMENTS = [
+            { id: 'extra-adults', totalId: 'extra-adults-total', label: 'Extra Adults' },
+            { id: 'extra-kids', totalId: 'extra-kids-total', label: 'Extra Kids' },
+            { id: 'kayak-hours', totalId: 'kayak-hours-total', label: 'Kayak Rental Hours' },
+            { id: 'extra-tables', totalId: 'extra-tables-total', label: 'Extra Tables' },
+            { id: 'extra-chairs', totalId: 'extra-chairs-total', label: 'Extra Chairs' },
+        ];
+
+        /**
+         * Formats a number into Philippine Peso currency format (e.g., ₱10,000).
+         */
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('en-PH', {
+                style: 'currency',
+                currency: 'PHP',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            }).format(value);
+        }
+
+        /**
+         * Toggles the display between the standard calculator/booking and the custom inquiry form/agreement flow.
+         * @param {boolean} isCustom - True if the custom plan is selected.
+         * @param {string} mode - 'inquiry' or 'agreement' for custom flow.
+         */
+        function toggleBookingMode(isCustom, mode = 'inquiry') {
+            const planSelector = document.getElementById('plan-selector');
+            const customSection = document.getElementById('custom-inquiry-section');
+            const standardFields = document.getElementById('standard-booking-fields');
+            const calculatorSummary = document.getElementById('calculator-summary');
+            const customSubmitButton = document.getElementById('custom-submit-button');
+            const planMessage = document.getElementById('plan-message');
+
+            if (isCustom) {
+                // CPA Mode
+                customSection.classList.remove('hidden');
+                standardFields.classList.add('hidden');
+                calculatorSummary.classList.add('hidden');
+                customSubmitButton.classList.remove('hidden');
+                planMessage.textContent = "Owner discussion required. Please fill out the Custom Pricing Agreement (CPA) section below.";
+
+                if (mode === 'agreement') {
+                    // Loaded CPA view - handled by generateAgreement()
+                } else {
+                    // New Inquiry View
+                    document.getElementById('inquiry-input-fields').classList.remove('hidden');
+                    document.getElementById('agreement-id-check').classList.remove('hidden');
+                }
+            } else {
+                // Standard Booking Mode
+                customSection.classList.add('hidden');
+                standardFields.classList.remove('hidden');
+                calculatorSummary.classList.remove('hidden');
+                customSubmitButton.classList.add('hidden');
+                const selectedRate = planSelector.options[planSelector.selectedIndex].dataset.rate;
+                planMessage.textContent = `Base rate for exclusive cottage rental (Up to 10 pax): ${formatCurrency(selectedRate)}.`;
+            }
+        }
+
+        /**
+         * Checks the guest count and forces the selection to 'custom' if it's a small group, 
+         * strongly recommending a discount inquiry.
+         */
+        function checkGuestCountAndSwitchMode() {
+            const guestCount = parseInt(document.getElementById('guest-count').value);
+            const planSelector = document.getElementById('plan-selector');
+            const guestMessage = document.getElementById('guest-count-message');
+            
+            // Ensure inputs for Extra Adults/Kids are zeroed out if total guests are 10 or less
+            if (guestCount <= 10) {
+                document.getElementById('extra-adults').value = 0;
+                document.getElementById('extra-kids').value = 0;
+                document.getElementById('extra-adults').disabled = true;
+                document.getElementById('extra-kids').disabled = true;
+                
+                if (planSelector.value !== 'custom') {
+                    // Smart suggestion: You are overpaying, switch to custom inquiry.
+                    planSelector.value = 'custom';
+                    guestMessage.innerHTML = '🔔 <span class="text-red-600 font-bold">Small Group Alert:</span> Since you are **10 guests or less**, please select the **Custom Inquiry** plan above to request a discounted rate.';
+                } else {
+                    guestMessage.innerHTML = '✅ <span class="text-green-600 font-bold">Perfect!</span> Proceed with your Custom Inquiry below for a specialized small-group rate.';
+                }
+
+            } else {
+                // Standard booking path for > 10 guests.
+                document.getElementById('extra-adults').disabled = false;
+                document.getElementById('extra-kids').disabled = false;
+                guestMessage.innerHTML = 'Base plans cover **up to 10** guests. Guests over 10 will incur extra charges. Please enter the number of **Extra Adults/Kids** in the Add-ons section.';
+            }
+
+            calculatePrice();
+        }
+
+        /**
+         * Calculates the total price based on the selected plan and add-ons.
+         */
+        function calculatePrice(customRate = null) {
+            const planSelector = document.getElementById('plan-selector');
+            const selectedPlan = planSelector.value;
+            let baseRate = 0;
+            let totalAddons = 0;
+
+            // Step 1: Handle Custom Plan logic
+            if (selectedPlan === 'custom') {
+                toggleBookingMode(true, customRate ? 'agreement' : 'inquiry');
+                if (customRate !== null) {
+                    baseRate = customRate;
+                } else {
+                    // For a new inquiry, rate is 0 in the display.
+                    baseRate = 0; 
+                }
+                totalAddons = 0; // Add-ons are usually bundled/negotiated in CPA, but for this simulation, they are zero.
+
+            } else {
+                toggleBookingMode(false);
+                baseRate = parseFloat(planSelector.options[planSelector.selectedIndex].dataset.rate || 0);
+
+                // Step 2: Calculate Add-ons (Only for standard plans)
+                ADDON_ELEMENTS.forEach(item => {
+                    const inputElement = document.getElementById(item.id);
+                    const totalElement = document.getElementById(item.totalId);
+                    
+                    let value = parseInt(inputElement.value) || 0;
+                    const rate = parseFloat(inputElement.dataset.rate || 0);
+
+                    // Special logic for Extra Adults/Kids: Only charge for guests OVER 10
+                    if (item.id === 'extra-adults' || item.id === 'extra-kids') {
+                        // The 'extra-adults'/'extra-kids' inputs are now used to specify guests over 10.
+                    }
+                    
+                    const itemTotal = value * rate;
+                    totalAddons += itemTotal;
+                    totalElement.textContent = formatCurrency(itemTotal);
+                });
+            }
+
+            // Step 3: Calculate Final Totals
+            const totalAmount = baseRate + totalAddons;
+            const downPayment = totalAmount / 2;
+            const remainingBalance = totalAmount - downPayment;
+
+            // Step 4: Update Display
+            document.getElementById('plan-rate-display').textContent = formatCurrency(baseRate);
+            document.getElementById('addons-subtotal-display').textContent = formatCurrency(totalAddons);
+            document.getElementById('total-amount-display').textContent = formatCurrency(totalAmount);
+            document.getElementById('down-payment-display').textContent = formatCurrency(downPayment);
+            document.getElementById('remaining-balance-display').textContent = formatCurrency(remainingBalance);
+        }
+
+        /**
+         * Simulates sending a custom inquiry.
+         */
+        function handleCustomSubmit() {
+            const details = document.getElementById('custom-request-details').value;
+            const name = document.getElementById('client-name').value;
+            const email = document.getElementById('client-email').value;
+
+            if (!name || !email || !details) {
+                alert("Please provide your name, email, and detailed request before submitting the inquiry.");
+                return;
+            }
+
+            // Simulate API call to send inquiry
+            console.log(`CPA Inquiry Sent: Name: ${name}, Email: ${email}, Details: ${details}`);
+            
+            // Hide inquiry fields and show success message
+            document.getElementById('inquiry-input-fields').classList.add('hidden');
+            document.getElementById('custom-submit-button').classList.add('hidden');
+            document.getElementById('inquiry-status-message').innerHTML = `
+                ✅ **Inquiry Submitted!** Thank you, **${name}**. The owner will review your request and send a personalized Agreement ID to **${email}** within 24 hours. Please check back later using your Agreement ID to proceed.
+            `;
+            alert("Custom Booking Inquiry Sent! Please check your email for the owner's response and your Agreement ID.");
+        }
+
+
+        /**
+         * Loads and displays a Custom Pricing Agreement (CPA) by ID.
+         */
+        function generateAgreement() {
+            const agreementId = document.getElementById('agreement-id-input').value.toUpperCase().trim();
+            const agreementData = CPA_DATABASE[agreementId];
+
+            if (!agreementData) {
+                alert("Error: Agreement ID not found. Please ensure it is correct or submit a new inquiry.");
+                return;
+            }
+
+            // Load view
+            document.getElementById('booking-form').style.display = 'none';
+            document.getElementById('custom-agreement-view').style.display = 'block';
+
+            const totalRate = agreementData.rate;
+            const downPayment = totalRate / 2;
+            const remainingBalance = totalRate - downPayment;
+
+            // Generate HTML Content
+            const agreementHTML = `
+                <h3 class="text-2xl font-bold mb-4 text-payag-wood">Agreement ID: <span class="text-payag-teal">${agreementId}</span></h3>
+                <p class="mb-6">This Custom Pricing Agreement outlines the terms for your exclusive stay at Payag ni Gaston, superseding all standard published rates.</p>
+
+                <table class="w-full text-left border-collapse mb-8">
+                    <tr><th class="py-2 border-b border-gray-300">Description</th><th class="py-2 border-b border-gray-300 text-right">Value</th></tr>
+                    <tr><td class="py-2">Base Rate (Agreed Total)</td><td class="py-2 text-right font-bold">${formatCurrency(totalRate)}</td></tr>
+                    <tr><td class="py-2">Guests Covered</td><td class="py-2 text-right">${agreementData.guests}</td></tr>
+                    <tr><td class="py-2">Duration</td><td class="py-2 text-right">${agreementData.duration}</td></tr>
+                </table>
+
+                <h4 class="font-semibold text-lg mb-2 text-payag-teal">Special Conditions:</h4>
+                <p class="bg-gray-50 p-3 rounded-lg border border-gray-200 mb-6">${agreementData.details}</p>
+
+                <h4 class="font-semibold text-lg mb-2 text-payag-teal">Payment Terms:</h4>
+                <ul class="list-disc list-inside space-y-1">
+                    <li>**Total Amount Due:** <span class="font-bold text-red-700">${formatCurrency(totalRate)}</span></li>
+                    <li>**Required Down Payment (50%):** <span class="font-bold text-red-700">${formatCurrency(downPayment)}</span> - Due upon signing/confirmation.</li>
+                    <li>**Remaining Balance:** <span class="font-bold text-green-700">${formatCurrency(remainingBalance)}</span> - Due upon arrival/check-in.</li>
+                </ul>
+
+                <p class="mt-8 text-sm text-gray-500">I hereby agree to the terms and conditions set forth in this Custom Pricing Agreement.</p>
+                <div class="mt-12 flex justify-between pt-4 border-t border-dashed">
+                    <div class="text-center w-1/3">______________________<br>Client Signature</div>
+                    <div class="text-center w-1/3">______________________<br>Owner Signature</div>
+                    <div class="text-center w-1/3">______________________<br>Date</div>
+                </div>
+            `;
+            document.getElementById('agreement-content').innerHTML = agreementHTML;
+            document.getElementById('agreement-total-display').textContent = formatCurrency(totalRate);
+            
+            // Update the calculator summary *in the background* just in case the user navigates back
+            calculatePrice(totalRate);
+        }
+
+        // --- Initial Load Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check guest count on load (default value is 10)
+            checkGuestCountAndSwitchMode();
+            // Select the popular plan on initial load
+            selectPlan('standard');
+        });
+
+        // Function used by the landing page buttons to navigate and set the plan
+        function selectPlan(plan) {
+            document.getElementById('plan-selector').value = plan;
+            // Force recalculation and mode switch based on the manually selected plan
+            checkGuestCountAndSwitchMode();
+        }
+    </script>
+</body>
+</html>

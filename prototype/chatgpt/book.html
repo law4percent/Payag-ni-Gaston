@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Now | Payag ni Gaston Resort</title>
+  <link rel="stylesheet" href="book.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">🏝️ Payag ni Gaston</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="index.html#about">About</a></li>
+        <li><a href="index.html#rooms">Rooms</a></li>
+        <li><a href="index.html#gallery">Gallery</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Booking Section -->
+  <section class="booking">
+    <h1>Book Your Stay</h1>
+    <p class="subtitle">Reserve your private getaway — just for you and your loved ones.</p>
+
+    <form class="booking-form" action="#" method="post" enctype="multipart/form-data">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="fullname" placeholder="Enter your full name" required>
+      </div>
+
+      <div class="form-group">
+        <label>Contact Number</label>
+        <input type="tel" name="contact" placeholder="+63 9XX XXX XXXX" required>
+      </div>
+
+      <div class="form-group">
+        <label>Check-in Date</label>
+        <input type="date" name="checkin" required>
+      </div>
+
+      <div class="form-group">
+        <label>Check-out Date (Next Day)</label>
+        <input type="date" name="checkout" disabled placeholder="Auto-set to next day">
+      </div>
+
+      <div class="form-group">
+        <label>Number of Guests</label>
+        <input type="number" name="guests" placeholder="e.g. 10" min="1" required>
+      </div>
+
+      <div class="form-group">
+        <label>Upload GCash Payment Reference</label>
+        <input type="file" name="payment-proof" accept="image/*" required>
+      </div>
+
+      <button type="submit" class="submit-btn">Submit Reservation</button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Payag ni Gaston Resort | Designed with ❤️ by Lawrence Roble</p>
+  </footer>
+
+</body>
+</html>

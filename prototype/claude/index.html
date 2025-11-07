@@ -1,0 +1,1553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payag ni Gaston - Beach Resort Booking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Navigation */
+        nav {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav h1 {
+            color: #0077be;
+            font-size: 1.5rem;
+        }
+
+        nav button {
+            background: #0077be;
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s;
+            margin-left: 0.5rem;
+        }
+
+        nav button:hover {
+            background: #005a8c;
+        }
+
+        nav .logout-btn {
+            background: #f44336;
+        }
+
+        nav .logout-btn:hover {
+            background: #d32f2f;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), 
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%230077be" width="1200" height="600"/><text x="50%25" y="50%25" font-size="48" fill="white" text-anchor="middle" dominant-baseline="middle">Beautiful Beach Resort</text></svg>');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            margin-top: 70px;
+        }
+
+        .hero-content h2 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .cta-btn {
+            background: #ff6b35;
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(255,107,53,0.4);
+        }
+
+        .cta-btn:hover {
+            background: #e55a2b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255,107,53,0.6);
+        }
+
+        /* Sections */
+        section {
+            padding: 5rem 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        section h2 {
+            font-size: 2.5rem;
+            color: #0077be;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+
+        .feature-card h3 {
+            color: #0077be;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.8;
+        }
+
+        /* Pricing */
+        .pricing-card {
+            background: linear-gradient(135deg, #0077be, #00a8e8);
+            color: white;
+            padding: 3rem;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .pricing-card h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin: 1rem 0;
+        }
+
+        .price-note {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        /* Auth Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 3rem;
+            border-radius: 15px;
+            max-width: 450px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .modal-content h2 {
+            color: #0077be;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #0077be;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: #0077be;
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 1rem;
+        }
+
+        .btn-primary:hover {
+            background: #005a8c;
+        }
+
+        .btn-success {
+            background: #4caf50;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+
+        .btn-secondary {
+            background: #757575;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            width: auto;
+            display: inline-block;
+            margin: 0.5rem 0.5rem 0 0;
+        }
+
+        .btn-secondary:hover {
+            background: #616161;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 1.5rem;
+            color: #666;
+        }
+
+        .auth-switch a {
+            color: #0077be;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        /* Booking Page */
+        .booking-container {
+            display: none;
+            padding-top: 100px;
+        }
+
+        .booking-container.active {
+            display: block;
+        }
+
+        .calendar-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-top: 1rem;
+        }
+
+        .calendar-day {
+            padding: 1rem;
+            text-align: center;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .calendar-day.available:hover {
+            background: #e3f2fd;
+            border-color: #0077be;
+        }
+
+        .calendar-day.booked {
+            background: #ffebee;
+            border-color: #f44336;
+            cursor: not-allowed;
+        }
+
+        .calendar-day.selected {
+            background: #0077be;
+            color: white;
+            border-color: #0077be;
+        }
+
+        .booking-form {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .booking-summary {
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-top: 2rem;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem 0;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid #0077be;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #0077be;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            padding-top: 100px;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #0077be, #00a8e8);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .booking-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            border-left: 4px solid #0077be;
+        }
+
+        .booking-status {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-completed {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        /* Admin Dashboard */
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #0077be;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #0077be;
+            border-bottom-color: #0077be;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            color: #0077be;
+        }
+
+        .payment-proof {
+            max-width: 300px;
+            border-radius: 5px;
+            margin-top: 1rem;
+            border: 2px solid #ddd;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .badge-new {
+            background: #ff6b35;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h2 {
+                font-size: 2rem;
+            }
+            
+            nav h1 {
+                font-size: 1.2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .calendar {
+                grid-template-columns: repeat(7, 1fr);
+                gap: 5px;
+            }
+
+            .calendar-day {
+                padding: 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container">
+            <h1>🏖️ Payag ni Gaston</h1>
+            <div>
+                <button id="authBtn" onclick="showLogin()">Login</button>
+                <button id="userBtn" class="hidden" onclick="showDashboard()">Dashboard</button>
+                <button id="logoutBtn" class="hidden logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Landing Page -->
+    <div id="landingPage">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Your Exclusive Beach Paradise</h2>
+                <p>Experience 24 hours of pure tranquility by the sea</p>
+                <button class="cta-btn" onclick="scrollToFeatures()">Explore More</button>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features">
+            <h2>What We Offer</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>🏠 Comfortable Cottages</h3>
+                    <p>Spacious cottages with stunning sea views, perfect for families and groups. Enjoy the cool breeze and the sound of waves.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🛏️ Cozy Rooms</h3>
+                    <p>Clean and comfortable rooms equipped with beds and essential amenities for a good night's rest after a day at the beach.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🍳 Fully-Equipped Kitchen</h3>
+                    <p>Prepare your favorite meals with our complete kitchen facilities. Cooking utensils and equipment provided.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🚿 Clean Comfort Rooms</h3>
+                    <p>Well-maintained bathrooms with hot and cold shower facilities for your convenience.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🛶 Kayak Adventures</h3>
+                    <p>Free kayak usage included! Explore the crystal-clear waters and create unforgettable memories.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🚗 Spacious Parking</h3>
+                    <p>Ample parking space for multiple vehicles, ensuring your car is safe and secure during your stay.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🥥 Tropical Ambiance</h3>
+                    <p>Surrounded by coconut trees and lush grass, providing natural shade and a true island feeling.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌊 Private Beach Access</h3>
+                    <p>Exclusive 24-hour access to the pristine beach. No crowds, just you and your loved ones enjoying the sea.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🌌 Starry Night Sky</h3>
+                    <p>Experience breathtaking stargazing away from city lights. Perfect for romantic evenings and peaceful nights.</p>
+                </div>
+            </div>
+
+            <div class="text-center" style="margin-top: 3rem;">
+                <button class="cta-btn" onclick="showLogin()">Book Your Stay Now</button>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section>
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">Choose Your Stay Plan 🌴</h2>
+            <p style="text-align: center; color: #666; font-size: 1.2rem; margin-bottom: 3rem;">Select the perfect getaway experience for your group at <strong>Payag ni Gaston</strong></p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; margin-bottom: 3rem;">
+                
+                <!-- BASIC PLAN -->
+                <div class="pricing-card" style="background: linear-gradient(135deg, #64b5f6, #42a5f5); transform: scale(0.95);">
+                    <h3 style="font-size: 1.8rem;">Basic Stay</h3>
+                    <div class="price" style="font-size: 2.8rem;">₱6,000</div>
+                    <p class="price-note">per day (24 hours)</p>
+                    <ul style="text-align: left; list-style: none; padding: 0; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0;">🏖 Beach access (10 persons)</li>
+                        <li style="padding: 0.5rem 0;">🏡 Cottage A (small)</li>
+                        <li style="padding: 0.5rem 0;">🍳 Free kitchen & grill area</li>
+                        <li style="padding: 0.5rem 0;">🪑 Free 2 tables & 10 chairs</li>
+                        <li style="padding: 0.5rem 0;">🚻 Free comfort room</li>
+                        <li style="padding: 0.5rem 0;">💧 Free water & electricity</li>
+                    </ul>
+                    <button class="cta-btn" onclick="selectPlan('basic', 6000)" style="background: white; color: #42a5f5;">Book Basic</button>
+                </div>
+
+                <!-- STANDARD PLAN (Featured) -->
+                <div class="pricing-card" style="background: linear-gradient(135deg, #0077be, #005a8c); transform: scale(1.05); box-shadow: 0 8px 30px rgba(0,119,190,0.4); position: relative;">
+                    <div style="position: absolute; top: -15px; right: 20px; background: #ff6b35; color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold;">POPULAR</div>
+                    <h3 style="font-size: 2rem;">Standard Escape</h3>
+                    <div class="price" style="font-size: 3.5rem;">₱8,500</div>
+                    <p class="price-note">per day (24 hours)</p>
+                    <ul style="text-align: left; list-style: none; padding: 0; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0;">🏖 Beach access (10 persons)</li>
+                        <li style="padding: 0.5rem 0;">🏡 Cottage B (large)</li>
+                        <li style="padding: 0.5rem 0;">🍳 Free kitchen & grill area</li>
+                        <li style="padding: 0.5rem 0;">🪑 Free 2 tables & 10 chairs</li>
+                        <li style="padding: 0.5rem 0;">🚻 Free comfort room</li>
+                        <li style="padding: 0.5rem 0;">💧 Free water & electricity</li>
+                    </ul>
+                    <button class="cta-btn" onclick="selectPlan('standard', 8500)">Book Standard</button>
+                </div>
+
+                <!-- PREMIUM PLAN -->
+                <div class="pricing-card" style="background: linear-gradient(135deg, #f57c00, #ef6c00); transform: scale(0.95);">
+                    <h3 style="font-size: 1.8rem;">Premium Exclusive</h3>
+                    <div class="price" style="font-size: 2.8rem;">₱10,000</div>
+                    <p class="price-note">per day (24 hours)</p>
+                    <ul style="text-align: left; list-style: none; padding: 0; margin: 2rem 0;">
+                        <li style="padding: 0.5rem 0;">🏖 Beach access (10 persons)</li>
+                        <li style="padding: 0.5rem 0;">🏡 Cottage A + B (both!)</li>
+                        <li style="padding: 0.5rem 0;">🍳 Free kitchen & grill area</li>
+                        <li style="padding: 0.5rem 0;">🪑 Free 2 tables & 10 chairs</li>
+                        <li style="padding: 0.5rem 0;">🚻 Free comfort room</li>
+                        <li style="padding: 0.5rem 0;">💧 Free water & electricity</li>
+                    </ul>
+                    <button class="cta-btn" onclick="selectPlan('premium', 10000)" style="background: white; color: #ef6c00;">Book Premium</button>
+                </div>
+
+            </div>
+
+            <!-- Add-ons Section -->
+            <div style="background: #f5f5f5; padding: 2rem; border-radius: 15px; margin: 3rem 0;">
+                <h3 style="color: #0077be; font-size: 1.8rem; margin-bottom: 1.5rem;">✨ Optional Add-ons (Pay-as-you-go)</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; text-align: left;">
+                    <div style="background: white; padding: 1rem; border-radius: 8px;">
+                        <strong>🛶 Kayak</strong><br>
+                        <span style="color: #0077be; font-size: 1.2rem;">₱150 / hour</span>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 8px;">
+                        <strong>🪑 Extra Table</strong><br>
+                        <span style="color: #0077be; font-size: 1.2rem;">₱100 / piece</span>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 8px;">
+                        <strong>🪑 Extra Chair</strong><br>
+                        <span style="color: #0077be; font-size: 1.2rem;">₱25 / piece</span>
+                    </div>
+                    <div style="background: white; padding: 1rem; border-radius: 8px;">
+                        <strong>👨‍👩‍👧 Extra Guest</strong><br>
+                        <span style="color: #0077be; font-size: 1.2rem;">₱250 / adult</span><br>
+                        <span style="color: #666; font-size: 0.9rem;">₱150 / kid</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking Terms -->
+            <div style="background: #fff3cd; padding: 2rem; border-radius: 10px; border-left: 5px solid #ff6b35;">
+                <h3 style="color: #856404; margin-bottom: 1rem;">💳 Booking Terms</h3>
+                <ul style="color: #856404; text-align: left; line-height: 2;">
+                    <li><strong>50% down payment</strong> required to confirm booking</li>
+                    <li><strong>Full payment</strong> due on or before check-in date</li>
+                    <li><strong>24-hour exclusive use</strong> from your chosen check-in time</li>
+                    <li><strong>Cancellation:</strong> 7 days before for 50% refund, 14 days for full refund</li>
+                    <li><strong>Base capacity:</strong> 10 persons (additional guests charged separately)</li>
+                    <li><strong>Add-ons</strong> can be requested during booking or on-site</li>
+                </ul>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+            
+            <!-- Login Form -->
+            <div id="loginForm">
+                <h2>Welcome Back</h2>
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="loginEmail" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" required placeholder="Enter your password">
+                    </div>
+                    <div class="form-group">
+                        <label>Login as</label>
+                        <select id="userRole">
+                            <option value="client">Client</option>
+                            <option value="owner">Owner/Admin</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-primary">Login</button>
+                </form>
+                <div class="auth-switch">
+                    Don't have an account? <a href="#" onclick="showSignup(event)">Sign up here</a>
+                </div>
+                <div class="auth-switch" style="margin-top: 1rem; font-size: 0.85rem; color: #999;">
+                    Demo: Use any email. Select "Owner/Admin" to see admin dashboard.
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" class="hidden">
+                <h2>Create Account</h2>
+                <form onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" required placeholder="Juan Dela Cruz">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" required placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" required placeholder="09XX XXX XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" required placeholder="Minimum 6 characters">
+                    </div>
+                    <button type="submit" class="btn-primary">Create Account</button>
+                </form>
+                <div class="auth-switch">
+                    Already have an account? <a href="#" onclick="showLogin(event)">Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CLIENT: Booking Page -->
+    <div id="bookingPage" class="booking-container">
+        <section>
+            <h2>Book Your Exclusive Stay</h2>
+            
+            <div class="calendar-section">
+                <h3>Select Your Check-in Date</h3>
+                <p style="color: #666; margin: 1rem 0;">Click on an available date to select. The resort will be exclusively yours for 24 hours.</p>
+                
+                <div class="calendar">
+                    <div class="calendar-day available" onclick="selectDate(this, '2025-11-15')">
+                        <strong>15</strong><br>Nov
+                    </div>
+                    <div class="calendar-day booked" title="Already booked">
+                        <strong>16</strong><br>Nov
+                    </div>
+                    <div class="calendar-day available" onclick="selectDate(this, '2025-11-17')">
+                        <strong>17</strong><br>Nov
+                    </div>
+                    <div class="calendar-day available" onclick="selectDate(this, '2025-11-18')">
+                        <strong>18</strong><br>Nov
+                    </div>
+                    <div class="calendar-day available" onclick="selectDate(this, '2025-11-19')">
+                        <strong>19</strong><br>Nov
+                    </div>
+                    <div class="calendar-day booked" title="Already booked">
+                        <strong>20</strong><br>Nov
+                    </div>
+                    <div class="calendar-day available" onclick="selectDate(this, '2025-11-21')">
+                        <strong>21</strong><br>Nov
+                    </div>
+                </div>
+            </div>
+
+            <div class="booking-form">
+                <h3>Booking Details</h3>
+                <form onsubmit="handleBooking(event)">
+                    <div class="form-group">
+                        <label>Selected Plan</label>
+                        <select id="planSelect" onchange="updatePlanPricing()" required>
+                            <option value="">-- Select a plan --</option>
+                            <option value="basic|6000">Basic Stay - ₱6,000</option>
+                            <option value="standard|8500">Standard Escape - ₱8,500 (Popular)</option>
+                            <option value="premium|10000">Premium Exclusive - ₱10,000</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Check-in Date</label>
+                        <input type="text" id="checkinDate" readonly required placeholder="Select from calendar above">
+                    </div>
+                    <div class="form-group">
+                        <label>Check-in Time</label>
+                        <input type="time" value="08:00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Number of Guests (Base: 10 persons)</label>
+                        <input type="number" id="guestCount" value="10" min="1" max="50" required onchange="calculateTotal()">
+                        <small style="color: #666;">Additional guests: ₱250/adult, ₱150/kid</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Extra Adults (beyond 10)</label>
+                        <input type="number" id="extraAdults" value="0" min="0" max="40" onchange="calculateTotal()">
+                    </div>
+                    <div class="form-group">
+                        <label>Extra Kids (beyond base)</label>
+                        <input type="number" id="extraKids" value="0" min="0" max="20" onchange="calculateTotal()">
+                    </div>
+                    
+                    <div style="background: #f5f5f5; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0;">
+                        <h4 style="color: #0077be; margin-bottom: 1rem;">Add-ons</h4>
+                        <div class="form-group">
+                            <label>🛶 Kayak (hours)</label>
+                            <input type="number" id="kayakHours" value="0" min="0" max="10" onchange="calculateTotal()">
+                            <small style="color: #666;">₱150 per hour</small>
+                        </div>
+                        <div class="form-group">
+                            <label>🪑 Extra Tables</label>
+                            <input type="number" id="extraTables" value="0" min="0" max="10" onchange="calculateTotal()">
+                            <small style="color: #666;">₱100 per piece</small>
+                        </div>
+                        <div class="form-group">
+                            <label>🪑 Extra Chairs</label>
+                            <input type="number" id="extraChairs" value="0" min="0" max="50" onchange="calculateTotal()">
+                            <small style="color: #666;">₱25 per piece</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contact Number</label>
+                        <input type="tel" required placeholder="09XX XXX XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label>Special Requests (Optional)</label>
+                        <textarea style="width: 100%; padding: 0.8rem; border: 2px solid #ddd; border-radius: 5px; font-family: inherit; resize: vertical;" rows="4" placeholder="Any special requests or questions?"></textarea>
+                    </div>
+
+                    <div class="booking-summary">
+                        <h4 style="margin-bottom: 1rem; color: #0077be;">Booking Summary</h4>
+                        <div class="summary-row">
+                            <span id="planLabel">Plan</span>
+                            <span id="planPrice">₱0</span>
+                        </div>
+                        <div class="summary-row" id="extraAdultsRow" style="display: none;">
+                            <span id="extraAdultsLabel">Extra Adults (0 × ₱250)</span>
+                            <span id="extraAdultsPrice">₱0</span>
+                        </div>
+                        <div class="summary-row" id="extraKidsRow" style="display: none;">
+                            <span id="extraKidsLabel">Extra Kids (0 × ₱150)</span>
+                            <span id="extraKidsPrice">₱0</span>
+                        </div>
+                        <div class="summary-row" id="kayakRow" style="display: none;">
+                            <span id="kayakLabel">Kayak (0 hrs × ₱150)</span>
+                            <span id="kayakPrice">₱0</span>
+                        </div>
+                        <div class="summary-row" id="tablesRow" style="display: none;">
+                            <span id="tablesLabel">Extra Tables (0 × ₱100)</span>
+                            <span id="tablesPrice">₱0</span>
+                        </div>
+                        <div class="summary-row" id="chairsRow" style="display: none;">
+                            <span id="chairsLabel">Extra Chairs (0 × ₱25)</span>
+                            <span id="chairsPrice">₱0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Down Payment (50%)</span>
+                            <span id="downPayment">₱0</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Remaining Balance</span>
+                            <span id="remainingBalance">₱0</span>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total Amount</span>
+                            <span id="totalAmount">₱0</span>
+                        </div>
+                        <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+                            * You will pay the down payment (50%) to confirm your booking.<br>
+                            * The remaining balance is due on or before your check-in date.
+                        </p>
+                    </div>
+
+                    <button type="submit" class="btn-primary">Proceed to Payment</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <!-- CLIENT: Dashboard -->
+    <div id="clientDashboard" class="dashboard">
+        <section>
+            <div class="dashboard-header">
+                <h2>Welcome, Juan!</h2>
+                <p>Manage your bookings and reservations here</p>
+            </div>
+
+            <h3 style="margin-bottom: 1.5rem; color: #0077be;">Your Bookings</h3>
+            
+            <div class="booking-card">
+                <h4 style="color: #0077be; margin-bottom: 0.5rem;">Booking #PG2025001</h4>
+                <p><strong>Check-in:</strong> November 17, 2025 at 8:00 AM</p>
+                <p><strong>Check-out:</strong> November 18, 2025 at 8:00 AM</p>
+                <p><strong>Guests:</strong> 12 people</p>
+                <p><strong>Total Amount:</strong> ₱8,000</p>
+                <p><strong>Down Payment:</strong> ₱4,000 (Paid ✓)</p>
+                <p><strong>Balance:</strong> ₱4,000 (Pending)</p>
+                <span class="booking-status status-confirmed">Confirmed</span>
+                <div class="action-buttons">
+                    <button class="btn-secondary">View Receipt</button>
+                    <button class="btn-secondary">Upload Full Payment</button>
+                    <button class="btn-secondary btn-danger" style="background: #f44336;">Cancel Booking</button>
+                </div>
+            </div>
+
+            <div class="booking-card">
+                <h4 style="color: #0077be; margin-bottom: 0.5rem;">Booking #PG2025002</h4>
+                <p><strong>Check-in:</strong> December 24, 2025 at 2:00 PM</p>
+                <p><strong>Check-out:</strong> December 25, 2025 at 2:00 PM</p>
+                <p><strong>Guests:</strong> 20 people</p>
+                <p><strong>Total Amount:</strong> ₱8,000</p>
+                <p><strong>Down Payment:</strong> ₱4,000 (Pending Upload)</p>
+                <span class="booking-status status-pending">Awaiting Payment</span>
+                <div class="action-buttons">
+                    <button class="btn-secondary btn-success" style="background: #4caf50;">Upload Payment Proof</button>
+                </div>
+            </div>
+
+            <button class="cta-btn" onclick="showBooking()" style="margin-top: 2rem;">Make New Booking</button>
+        </section>
+    </div>
+
+    <!-- OWNER: Admin Dashboard -->
+    <div id="adminDashboard" class="dashboard">
+        <section>
+            <div class="dashboard-header">
+                <h2>👨‍💼 Owner Dashboard</h2>
+                <p>Manage bookings, payments, and resort availability</p>
+            </div>
+
+            <!-- Statistics -->
+            <div class="admin-stats">
+                <div class="stat-card">
+                    <h3>8</h3>
+                    <p>Total Bookings</p>
+                </div>
+                <div class="stat-card">
+                    <h3>3</h3>
+                    <p>Pending Payments</p>
+                </div>
+                <div class="stat-card">
+                    <h3>₱64,000</h3>
+                    <p>Total Revenue</p>
+                </div>
+                <div class="stat-card">
+                    <h3>5</h3>
+                    <p>Upcoming Bookings</p>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab active" onclick="showAdminTab('pending')">Pending Approval <span class="badge badge-new">3</span></button>
+                <button class="tab" onclick="showAdminTab('confirmed')">Confirmed</button>
+                <button class="tab" onclick="showAdminTab('completed')">Completed</button>
+                <button class="tab" onclick="showAdminTab('calendar')">Calendar Management</button>
+            </div>
+
+            <!-- Pending Approval Tab -->
+            <div id="adminPendingTab">
+                <h3 style="margin-bottom: 1.5rem; color: #0077be;">Bookings Awaiting Approval</h3>
+                
+                <div class="booking-card">
+                    <h4 style="color: #0077be; margin-bottom: 0.5rem;">Booking #PG2025003 <span class="badge badge-new">NEW</span></h4>
+                    <p><strong>Customer:</strong> Maria Santos</p>
+                    <p><strong>Email:</strong> maria.santos@email.com</p>
+                    <p><strong>Phone:</strong> 0917 123 4567</p>
+                    <p><strong>Check-in:</strong> November 25, 2025 at 10:00 AM</p>
+                    <p><strong>Check-out:</strong> November 26, 2025 at 10:00 AM</p>
+                    <p><strong>Guests:</strong> 15 people</p>
+                    <p><strong>Special Requests:</strong> Need extra tables for birthday party</p>
+                    <p><strong>Total Amount:</strong> ₱8,000</p>
+                    <p><strong>Down Payment:</strong> ₱4,000</p>
+                    <span class="booking-status status-pending">Awaiting Down Payment Verification</span>
+                    
+                    <div style="margin-top: 1rem;">
+                        <p><strong>Payment Proof:</strong></p>
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='400'%3E%3Crect fill='%23f0f0f0' width='300' height='400'/%3E%3Ctext x='50%25' y='50%25' font-size='16' text-anchor='middle' fill='%23666'%3EGCash Payment Screenshot%3C/text%3E%3C/svg%3E" class="payment-proof" alt="Payment proof">
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn-secondary btn-success" onclick="approveBooking('PG2025003')">✓ Approve & Confirm</button>
+                        <button class="btn-secondary btn-danger" onclick="rejectBooking('PG2025003')">✗ Reject Booking</button>
+                        <button class="btn-secondary" onclick="contactCustomer('maria.santos@email.com')">📧 Contact Customer</button>
+                    </div>
+                </div>
+
+                <div class="booking-card">
+                    <h4 style="color: #0077be; margin-bottom: 0.5rem;">Booking #PG2025004 <span class="badge badge-new">NEW</span></h4>
+                    <p><strong>Customer:</strong> Pedro Reyes</p>
+                    <p><strong>Email:</strong> pedro.reyes@email.com</p>
+                    <p><strong>Phone:</strong> 0923 456 7890</p>
+                    <p><strong>Check-in:</strong> December 1, 2025 at 8:00 AM</p>
+                    <p><strong>Check-out:</strong> December 2, 2025 at 8:00 AM</p>
+                    <p><strong>Guests:</strong> 25 people</p>
+                    <p><strong>Special Requests:</strong> Company outing, need sound system</p>
+                    <p><strong>Total Amount:</strong> ₱8,000</p>
+                    <span class="booking-status status-pending">Awaiting Down Payment Upload</span>
+
+                    <div class="action-buttons">
+                        <button class="btn-secondary" onclick="contactCustomer('pedro.reyes@email.com')">📧 Send Payment Reminder</button>
+                        <button class="btn-secondary btn-danger" onclick="cancelBooking('PG2025004')">✗ Cancel (No Payment)</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Confirmed Tab -->
+            <div id="adminConfirmedTab" class="hidden">
+                <h3 style="margin-bottom: 1.5rem; color: #0077be;">Confirmed Bookings</h3>
+                
+                <div class="booking-card">
+                    <h4 style="color: #0077be; margin-bottom: 0.5rem;">Booking #PG2025001</h4>
+                    <p><strong>Customer:</strong> Juan Dela Cruz</p>
+                    <p><strong>Email:</strong> juan@email.com</p>
+                    <p><strong>Phone:</strong> 0915 555 1234</p>
+                    <p><strong>Check-in:</strong> November 17, 2025 at 8:00 AM</p>
+                    <p><strong>Check-out:</strong> November 18, 2025 at 8:00 AM</p>
+                    <p><strong>Guests:</strong> 12 people</p>
+                    <p><strong>Payment Status:</strong></p>
+                    <p style="margin-left: 1rem;">• Down Payment: ₱4,000 ✓ Paid</p>
+                    <p style="margin-left: 1rem;">• Full Payment: ₱4,000 ⏳ Pending</p>
+                    <span class="booking-status status-confirmed">Confirmed - Awaiting Full Payment</span>
+
+                    <div class="action-buttons">
+                        <button class="btn-secondary">View Payment Receipts</button>
+                        <button class="btn-secondary" onclick="contactCustomer('juan@email.com')">📧 Send Payment Reminder</button>
+                        <button class="btn-secondary btn-success" onclick="markFullyPaid('PG2025001')">Mark as Fully Paid</button>
+                    </div>
+                </div>
+
+                <div class="booking-card">
+                    <h4 style="color: #0077be; margin-bottom: 0.5rem;">Booking #PG2025002</h4>
+                    <p><strong>Customer:</strong> Ana Garcia</p>
+                    <p><strong>Email:</strong> ana.garcia@email.com</p>
+                    <p><strong>Phone:</strong> 0918 777 8888</p>
+                    <p><strong>Check-in:</strong> December 24, 2025 at 2:00 PM</p>
+                    <p><strong>Check-out:</strong> December 25, 2025 at 2:00 PM</p>
+                    <p><strong>Guests:</strong> 20 people</p>
+                    <p><strong>Payment Status:</strong></p>
+                    <p style="margin-left: 1rem;">• Down Payment: ₱4,000 ✓ Paid</p>
+                    <p style="margin-left: 1rem;">• Full Payment: ₱4,000 ✓ Paid</p>
+                    <span class="booking-status status-confirmed">Fully Paid - Ready for Check-in</span>
+
+                    <div class="action-buttons">
+                        <button class="btn-secondary">View All Receipts</button>
+                        <button class="btn-secondary" onclick="contactCustomer('ana.garcia@email.com')">📧 Send Check-in Details</button>
+                        <button class="btn-secondary btn-success">✓ Check-in on Date</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed Tab -->
+            <div id="adminCompletedTab" class="hidden">
+                <h3 style="margin-bottom: 1.5rem; color: #0077be;">Completed Bookings</h3>
+                
+                <div class="booking-card">
+                    <h4 style="color: #0077be; margin-bottom: 0.5rem;">Booking #PG2025000</h4>
+                    <p><strong>Customer:</strong> Roberto Martinez</p>
+                    <p><strong>Check-in:</strong> November 10, 2025 at 9:00 AM</p>
+                    <p><strong>Check-out:</strong> November 11, 2025 at 9:00 AM</p>
+                    <p><strong>Guests:</strong> 18 people</p>
+                    <p><strong>Total Paid:</strong> ₱8,000 ✓</p>
+                    <span class="booking-status status-completed">Completed</span>
+
+                    <div class="action-buttons">
+                        <button class="btn-secondary">View Booking Details</button>
+                        <button class="btn-secondary">Download Receipt</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendar Management Tab -->
+            <div id="adminCalendarTab" class="hidden">
+                <h3 style="margin-bottom: 1.5rem; color: #0077be;">Block/Unblock Dates</h3>
+                <p style="color: #666; margin-bottom: 2rem;">Block dates for maintenance, personal use, or other reasons. Blocked dates won't be available for customer bookings.</p>
+                
+                <div class="booking-form">
+                    <h4>Block New Dates</h4>
+                    <form onsubmit="blockDate(event)">
+                        <div class="form-group">
+                            <label>Select Date to Block</label>
+                            <input type="date" required min="2025-11-07">
+                        </div>
+                        <div class="form-group">
+                            <label>Reason (Optional)</label>
+                            <input type="text" placeholder="e.g., Maintenance, Personal use">
+                        </div>
+                        <button type="submit" class="btn-primary btn-danger">Block Date</button>
+                    </form>
+                </div>
+
+                <div style="margin-top: 3rem;">
+                    <h4>Currently Blocked Dates</h4>
+                    <div class="booking-card">
+                        <p><strong>Date:</strong> November 16, 2025</p>
+                        <p><strong>Reason:</strong> Maintenance - Plumbing repair</p>
+                        <button class="btn-secondary btn-success" onclick="unblockDate('2025-11-16')">Unblock This Date</button>
+                    </div>
+                    <div class="booking-card">
+                        <p><strong>Date:</strong> November 20, 2025</p>
+                        <p><strong>Reason:</strong> Personal use - Family gathering</p>
+                        <button class="btn-secondary btn-success" onclick="unblockDate('2025-11-20')">Unblock This Date</button>
+                    </div>
+                </div>
+
+                <div style="margin-top: 3rem; padding: 1.5rem; background: #fff3cd; border-radius: 10px;">
+                    <h4 style="color: #856404; margin-bottom: 1rem;">⚙️ Pricing Settings</h4>
+                    <form onsubmit="updatePricing(event)">
+                        <div class="form-group">
+                            <label>24-Hour Rate (₱)</label>
+                            <input type="number" value="8000" min="1000" step="100" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Update Pricing</button>
+                    </form>
+                </div>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 Payag ni Gaston. All rights reserved.</p>
+        <p>📍 Cebu, Philippines | 📞 Contact: 09XX XXX XXXX</p>
+    </footer>
+
+    <script>
+        let isLoggedIn = false;
+        let userRole = 'client';
+        let selectedDate = null;
+        let currentPlanPrice = 0;
+
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function selectPlan(planType, price) {
+            if (!isLoggedIn) {
+                showLogin();
+                return;
+            }
+            
+            // Set the plan in the booking form
+            const planSelect = document.getElementById('planSelect');
+            planSelect.value = `${planType}|${price}`;
+            
+            showBooking();
+            calculateTotal();
+        }
+
+        function updatePlanPricing() {
+            const planSelect = document.getElementById('planSelect');
+            const selectedValue = planSelect.value;
+            
+            if (selectedValue) {
+                const [planType, price] = selectedValue.split('|');
+                currentPlanPrice = parseInt(price);
+                calculateTotal();
+            }
+        }
+
+        function calculateTotal() {
+            if (currentPlanPrice === 0) {
+                const planSelect = document.getElementById('planSelect');
+                const selectedValue = planSelect.value;
+                if (selectedValue) {
+                    const [planType, price] = selectedValue.split('|');
+                    currentPlanPrice = parseInt(price);
+                }
+            }
+
+            const planPrice = currentPlanPrice;
+            const extraAdults = parseInt(document.getElementById('extraAdults').value) || 0;
+            const extraKids = parseInt(document.getElementById('extraKids').value) || 0;
+            const kayakHours = parseInt(document.getElementById('kayakHours').value) || 0;
+            const extraTables = parseInt(document.getElementById('extraTables').value) || 0;
+            const extraChairs = parseInt(document.getElementById('extraChairs').value) || 0;
+
+            const extraAdultsPrice = extraAdults * 250;
+            const extraKidsPrice = extraKids * 150;
+            const kayakPrice = kayakHours * 150;
+            const tablesPrice = extraTables * 100;
+            const chairsPrice = extraChairs * 25;
+
+            const totalPrice = planPrice + extraAdultsPrice + extraKidsPrice + kayakPrice + tablesPrice + chairsPrice;
+            const downPayment = Math.round(totalPrice * 0.5);
+            const remainingBalance = totalPrice - downPayment;
+
+            // Update summary
+            const planSelect = document.getElementById('planSelect');
+            const planText = planSelect.options[planSelect.selectedIndex]?.text || 'Select a plan';
+            document.getElementById('planLabel').textContent = planText;
+            document.getElementById('planPrice').textContent = `₱${planPrice.toLocaleString()}`;
+
+            // Extra adults
+            if (extraAdults > 0) {
+                document.getElementById('extraAdultsRow').style.display = 'flex';
+                document.getElementById('extraAdultsLabel').textContent = `Extra Adults (${extraAdults} × ₱250)`;
+                document.getElementById('extraAdultsPrice').textContent = `₱${extraAdultsPrice.toLocaleString()}`;
+            } else {
+                document.getElementById('extraAdultsRow').style.display = 'none';
+            }
+
+            // Extra kids
+            if (extraKids > 0) {
+                document.getElementById('extraKidsRow').style.display = 'flex';
+                document.getElementById('extraKidsLabel').textContent = `Extra Kids (${extraKids} × ₱150)`;
+                document.getElementById('extraKidsPrice').textContent = `₱${extraKidsPrice.toLocaleString()}`;
+            } else {
+                document.getElementById('extraKidsRow').style.display = 'none';
+            }
+
+            // Kayak
+            if (kayakHours > 0) {
+                document.getElementById('kayakRow').style.display = 'flex';
+                document.getElementById('kayakLabel').textContent = `Kayak (${kayakHours} hrs × ₱150)`;
+                document.getElementById('kayakPrice').textContent = `₱${kayakPrice.toLocaleString()}`;
+            } else {
+                document.getElementById('kayakRow').style.display = 'none';
+            }
+
+            // Tables
+            if (extraTables > 0) {
+                document.getElementById('tablesRow').style.display = 'flex';
+                document.getElementById('tablesLabel').textContent = `Extra Tables (${extraTables} × ₱100)`;
+                document.getElementById('tablesPrice').textContent = `₱${tablesPrice.toLocaleString()}`;
+            } else {
+                document.getElementById('tablesRow').style.display = 'none';
+            }
+
+            // Chairs
+            if (extraChairs > 0) {
+                document.getElementById('chairsRow').style.display = 'flex';
+                document.getElementById('chairsLabel').textContent = `Extra Chairs (${extraChairs} × ₱25)`;
+                document.getElementById('chairsPrice').textContent = `₱${chairsPrice.toLocaleString()}`;
+            } else {
+                document.getElementById('chairsRow').style.display = 'none';
+            }
+
+            document.getElementById('downPayment').textContent = `₱${downPayment.toLocaleString()}`;
+            document.getElementById('remainingBalance').textContent = `₱${remainingBalance.toLocaleString()}`;
+            document.getElementById('totalAmount').textContent = `₱${totalPrice.toLocaleString()}`;
+        }
+
+        function scrollToFeatures() {
+            document.getElementById('features').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showLogin(event) {
+            if (event) event.preventDefault();
+            document.getElementById('authModal').classList.add('active');
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('signupForm').classList.add('hidden');
+        }
+
+        function showSignup(event) {
+            event.preventDefault();
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('authModal').classList.remove('active');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            isLoggedIn = true;
+            userRole = document.getElementById('userRole').value;
+            const email = document.getElementById('loginEmail').value;
+            
+            closeModal();
+            
+            // Update UI
+            document.getElementById('authBtn').classList.add('hidden');
+            document.getElementById('userBtn').classList.remove('hidden');
+            document.getElementById('logoutBtn').classList.remove('hidden');
+            
+            if (userRole === 'owner') {
+                document.getElementById('userBtn').textContent = 'Admin Dashboard';
+                showAdminDashboard();
+                alert('Logged in as Owner/Admin!');
+            } else {
+                document.getElementById('userBtn').textContent = 'My Dashboard';
+                showBooking();
+                alert('Login successful! You can now book your stay.');
+            }
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            alert('Account created successfully! Please login.');
+            showLogin(event);
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            userRole = 'client';
+            document.getElementById('authBtn').classList.remove('hidden');
+            document.getElementById('userBtn').classList.add('hidden');
+            document.getElementById('logoutBtn').classList.add('hidden');
+            
+            // Show landing page
+            document.getElementById('landingPage').style.display = 'block';
+            document.getElementById('bookingPage').classList.remove('active');
+            document.getElementById('clientDashboard').classList.remove('active');
+            document.getElementById('adminDashboard').classList.remove('active');
+            
+            window.scrollTo(0, 0);
+            alert('Logged out successfully!');
+        }
+
+        function showBooking() {
+            if (!isLoggedIn) {
+                showLogin();
+                return;
+            }
+            
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('bookingPage').classList.add('active');
+            document.getElementById('clientDashboard').classList.remove('active');
+            document.getElementById('adminDashboard').classList.remove('active');
+            window.scrollTo(0, 0);
+        }
+
+        function showDashboard() {
+            if (userRole === 'owner') {
+                showAdminDashboard();
+            } else {
+                showClientDashboard();
+            }
+        }
+
+        function showClientDashboard() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('bookingPage').classList.remove('active');
+            document.getElementById('clientDashboard').classList.add('active');
+            document.getElementById('adminDashboard').classList.remove('active');
+            window.scrollTo(0, 0);
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('bookingPage').classList.remove('active');
+            document.getElementById('clientDashboard').classList.remove('active');
+            document.getElementById('adminDashboard').classList.add('active');
+            showAdminTab('pending');
+            window.scrollTo(0, 0);
+        }
+
+        function showAdminTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Hide all tabs
+            document.getElementById('adminPendingTab').classList.add('hidden');
+            document.getElementById('adminConfirmedTab').classList.add('hidden');
+            document.getElementById('adminCompletedTab').classList.add('hidden');
+            document.getElementById('adminCalendarTab').classList.add('hidden');
+            
+            // Show selected tab
+            if (tabName === 'pending') {
+                document.getElementById('adminPendingTab').classList.remove('hidden');
+            } else if (tabName === 'confirmed') {
+                document.getElementById('adminConfirmedTab').classList.remove('hidden');
+            } else if (tabName === 'completed') {
+                document.getElementById('adminCompletedTab').classList.remove('hidden');
+            } else if (tabName === 'calendar') {
+                document.getElementById('adminCalendarTab').classList.remove('hidden');
+            }
+        }
+
+        function selectDate(element, date) {
+            if (element.classList.contains('booked')) {
+                alert('Sorry, this date is already booked!');
+                return;
+            }
+            
+            // Remove previous selection
+            document.querySelectorAll('.calendar-day').forEach(day => {
+                day.classList.remove('selected');
+            });
+            
+            // Add selection
+            element.classList.add('selected');
+            selectedDate = date;
+            
+            // Update form
+            document.getElementById('checkinDate').value = new Date(date).toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function handleBooking(event) {
+            event.preventDefault();
+            
+            if (!selectedDate) {
+                alert('Please select a check-in date from the calendar!');
+                return;
+            }
+            
+            alert('Booking submitted successfully!\n\nBooking Reference: PG2025005\n\nPlease upload your down payment proof of ₱4,000.\n\nPayment instructions have been sent to your email.');
+            showClientDashboard();
+        }
+
+        function approveBooking(bookingId) {
+            alert(`Booking ${bookingId} approved!\n\nConfirmation email sent to customer.`);
+            location.reload();
+        }
+
+        function rejectBooking(bookingId) {
+            const reason = prompt('Enter reason for rejection:');
+            if (reason) {
+                alert(`Booking ${bookingId} rejected.\n\nRejection email with reason sent to customer.`);
+                location.reload();
+            }
+        }
+
+        function cancelBooking(bookingId) {
+            if (confirm('Are you sure you want to cancel this booking?')) {
+                alert(`Booking ${bookingId} cancelled.\n\nCancellation email sent to customer.`);
+                location.reload();
+            }
+        }
+
+        function contactCustomer(email) {
+            alert(`Opening email client to contact: ${email}`);
+        }
+
+        function markFullyPaid(bookingId) {
+            alert(`Booking ${bookingId} marked as fully paid!\n\nCheck-in details email sent to customer.`);
+            location.reload();
+        }
+
+        function blockDate(event) {
+            event.preventDefault();
+            alert('Date blocked successfully!\n\nThis date is now unavailable for customer bookings.');
+            location.reload();
+        }
+
+        function unblockDate(date) {
+            if (confirm(`Unblock date ${date}?`)) {
+                alert('Date unblocked!\n\nThis date is now available for bookings.');
+                location.reload();
+            }
+        }
+
+        function updatePricing(event) {
+            event.preventDefault();
+            alert('Pricing updated successfully!\n\nNew rate will apply to all future bookings.');
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('authModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

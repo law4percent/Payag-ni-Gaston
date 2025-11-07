@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner Management Dashboard</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for navigation simulation */
+        /* Hide all section content by default */
+        .content-section {
+            display: none;
+        }
+        /* Show the target section when its anchor is activated */
+        .content-section:target {
+            display: block;
+        }
+        /* Default view (Dashboard) if no target is set */
+        #dashboard:not(:target),
+        .content-section:not(:target) ~ #dashboard {
+            display: block;
+        }
+
+        /* Specific style for the active nav link */
+        .nav-link.active,
+        .nav-link:hover {
+            background-color: #006666; /* Darker teal for active state */
+        }
+        .nav-link.active svg,
+        .nav-link:hover svg {
+            color: #F5E5C9; /* Sand color for icons */
+        }
+
+        /* Set Inter as the primary font */
+        html {
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* Define the active state for the sidebar links based on the URL hash */
+        /* Check if the hash matches the link's href and apply active styles */
+        body:has(#bookings:target) #nav-dashboard { background-color: transparent; }
+        body:has(#bookings:target) #nav-bookings { background-color: #006666; }
+        body:has(#bookings:target) #nav-calendar { background-color: transparent; }
+
+        body:has(#calendar:target) #nav-dashboard { background-color: transparent; }
+        body:has(#calendar:target) #nav-bookings { background-color: transparent; }
+        body:has(#calendar:target) #nav-calendar { background-color: #006666; }
+
+        /* Default state if no hash is present (Dashboard is active) */
+        body:not(:has(:target)) #nav-dashboard { background-color: #006666; }
+
+        .nav-link {
+            transition: background-color 0.2s;
+        }
+
+        /* Custom color palette for a professional, branded feel */
+        .bg-payag-teal { background-color: #008080; } /* Primary Teal */
+        .text-payag-teal { color: #008080; }
+        .bg-payag-sand { background-color: #F5E5C9; } /* Light Sand */
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'payag-teal': '#008080',
+                        'payag-sand': '#F5E5C9',
+                        'payag-wood': '#6F4E37',
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 flex min-h-screen">
+
+    <!-- 1. SIDEBAR NAVIGATION (Fixed on desktop, scrolls with content on mobile) -->
+    <aside class="bg-payag-teal text-white w-64 space-y-6 py-7 px-2 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out">
+        <div class="px-4">
+            <h1 class="text-3xl font-extrabold tracking-tight text-payag-sand border-b border-payag-sand/50 pb-2">
+                Gaston's Console
+            </h1>
+            <p class="text-xs text-gray-300 mt-1">Management Dashboard</p>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav>
+            <a href="#dashboard" id="nav-dashboard" class="nav-link block py-3 px-4 rounded-lg flex items-center text-gray-100 hover:text-white">
+                <!-- Icon: Home -->
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l-7-7-7 7m7 7v7a1 1 0 001 1h3a1 1 0 001-1v-7a1 1 0 00-1-1h-3z"></path></svg>
+                Dashboard
+            </a>
+            <a href="#bookings" id="nav-bookings" class="nav-link block py-3 px-4 rounded-lg flex items-center text-gray-100 hover:text-white">
+                <!-- Icon: List -->
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+                Bookings
+            </a>
+            <a href="#calendar" id="nav-calendar" class="nav-link block py-3 px-4 rounded-lg flex items-center text-gray-100 hover:text-white">
+                <!-- Icon: Calendar -->
+                <svg class="w-6 h-6 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-4 4V3m0 0h.01M3 8h18M5 12h14M5 16h14M5 20h14M8 7H6M18 7h-2M4 7v14a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2z"></path></svg>
+                Calendar & Pricing
+            </a>
+        </nav>
+    </aside>
+
+    <!-- 2. MAIN CONTENT AREA -->
+    <div class="flex-1 p-4 md:p-8 overflow-y-auto">
+        <header class="mb-8 border-b pb-4 flex justify-between items-center">
+            <h2 class="text-4xl font-bold text-gray-800">
+                Management Console
+            </h2>
+            <div class="flex items-center space-x-4">
+                <span class="text-sm text-gray-600">Welcome, Owner Admin</span>
+                <!-- Avatar Placeholder -->
+                <div class="h-10 w-10 bg-gray-400 rounded-full flex items-center justify-center text-white font-semibold">AD</div>
+            </div>
+        </header>
+
+        <!-- 2.1. DASHBOARD SECTION (Default View) -->
+        <section id="dashboard" class="content-section">
+            <h3 class="text-3xl font-semibold mb-6 text-payag-teal">Dashboard Overview</h3>
+
+            <!-- Metric Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <!-- Card 1: Total Revenue -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-payag-teal">
+                    <p class="text-sm font-medium text-gray-500 uppercase">Total Revenue (YTD)</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">₱1,250,000</p>
+                    <p class="text-xs text-green-600 mt-2">+12% vs last year</p>
+                </div>
+                <!-- Card 2: Confirmed Bookings -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-green-500">
+                    <p class="text-sm font-medium text-gray-500 uppercase">Confirmed Bookings (Next 30 Days)</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">18</p>
+                    <p class="text-xs text-red-600 mt-2">1 cancellation this month</p>
+                </div>
+                <!-- Card 3: Pending Down Payments -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-yellow-500">
+                    <p class="text-sm font-medium text-gray-500 uppercase">Pending Down Payments</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">4</p>
+                    <p class="text-xs text-gray-500 mt-2">Requires action</p>
+                </div>
+                <!-- Card 4: Available Days -->
+                <div class="bg-white rounded-xl shadow-lg p-6 border-t-4 border-blue-500">
+                    <p class="text-sm font-medium text-gray-500 uppercase">Available Days (Next 90 Days)</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-1">68</p>
+                    <p class="text-xs text-gray-500 mt-2">3 weekend slots left</p>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-8">
+                <h4 class="text-xl font-semibold mb-4 text-gray-800">Quick Actions</h4>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#bookings" class="bg-blue-500 text-white py-2 px-4 rounded-full hover:bg-blue-600 transition">View Pending Bookings</a>
+                    <a href="#calendar" class="bg-payag-wood text-white py-2 px-4 rounded-full hover:bg-payag-wood/80 transition">Block Out Date</a>
+                    <button class="bg-green-500 text-white py-2 px-4 rounded-full hover:bg-green-600 transition">Send Reminder Emails</button>
+                </div>
+            </div>
+
+            <!-- Upcoming Booking Snapshot -->
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <h4 class="text-xl font-semibold mb-4 text-payag-teal">Next 3 Reservations</h4>
+                <ul class="space-y-4">
+                    <li class="p-3 border rounded-lg flex justify-between items-center bg-payag-sand/50">
+                        <div>
+                            <p class="font-bold text-lg text-gray-900">Dec 18 - 19</p>
+                            <p class="text-sm text-gray-600">Client: Jane Doe | Guests: 8</p>
+                        </div>
+                        <span class="px-3 py-1 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending DP</span>
+                    </li>
+                    <li class="p-3 border rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-lg text-gray-900">Dec 25 - 26</p>
+                            <p class="text-sm text-gray-600">Client: Mario Santos | Guests: 12</p>
+                        </div>
+                        <span class="px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>
+                    </li>
+                    <li class="p-3 border rounded-lg flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-lg text-gray-900">Jan 1 - 2</p>
+                            <p class="text-sm text-gray-600">Client: Risa Cruz | Guests: 6</p>
+                        </div>
+                        <span class="px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 2.2. BOOKINGS SECTION -->
+        <section id="bookings" class="content-section">
+            <h3 class="text-3xl font-semibold mb-6 text-payag-teal">All Bookings & Reservations</h3>
+
+            <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client (User ID)</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Guests</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- Row 1: Confirmed -->
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Dec 25 - 26, 2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">mario_santos_101</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-payag-teal font-semibold">₱7,500.00</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                <button class="text-indigo-600 hover:text-indigo-900">View</button>
+                                <button class="text-red-600 hover:text-red-900">Cancel</button>
+                            </td>
+                        </tr>
+                        <!-- Row 2: Pending Down Payment -->
+                        <tr class="bg-payag-sand/20 hover:bg-payag-sand/50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Dec 18 - 19, 2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">jane_d_32</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-payag-teal font-semibold">₱6,500.00</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending DP</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                <button class="text-indigo-600 hover:text-indigo-900">Remind</button>
+                                <button class="text-red-600 hover:text-red-900">Cancel</button>
+                            </td>
+                        </tr>
+                        <!-- Row 3: Cancelled -->
+                        <tr class="hover:bg-gray-50 opacity-70">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Nov 10 - 11, 2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">user_49</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">6</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-payag-teal font-semibold">₱6,000.00</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Cancelled</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <span class="text-gray-400">Archived</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 2.3. CALENDAR & PRICING SECTION -->
+        <section id="calendar" class="content-section">
+            <h3 class="text-3xl font-semibold mb-6 text-payag-teal">Availability & Pricing Management</h3>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Column 1: Pricing -->
+                <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Pricing Setup</h4>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label for="base-rate" class="block text-sm font-medium text-gray-700">Standard 24-Hour Base Rate (₱)</label>
+                            <input type="number" id="base-rate" value="6000"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                            <p class="text-xs text-gray-500 mt-1">This is the default rate for a 24-hour exclusive stay.</p>
+                        </div>
+
+                        <div>
+                            <label for="weekend-surcharge" class="block text-sm font-medium text-gray-700">Weekend/Holiday Surcharge (₱)</label>
+                            <input type="number" id="weekend-surcharge" value="1500"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                            <p class="text-xs text-gray-500 mt-1">Applied to Saturday, Sunday, and public holidays.</p>
+                        </div>
+
+                        <button class="w-full bg-green-600 text-white py-2 rounded-full hover:bg-green-700 transition font-semibold mt-4">Save Pricing</button>
+                    </div>
+                </div>
+
+                <!-- Column 2 & 3: Calendar and Date Blocking -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg">
+                    <h4 class="text-xl font-semibold mb-4 text-gray-800 border-b pb-2">Block Dates & Maintenance</h4>
+
+                    <!-- Calendar Placeholder (Simulation) -->
+                    <div class="p-4 bg-gray-50 rounded-lg mb-6">
+                        <p class="text-center font-bold text-lg mb-3">December 2025 Availability</p>
+                        <div class="grid grid-cols-7 gap-1 text-center text-sm font-semibold mb-2">
+                            <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center">
+                            <!-- Mock Calendar Days -->
+                            <div class="p-2 border rounded cursor-pointer bg-gray-200 text-gray-400">1</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">2</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">3</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">4</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">5</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">6</div>
+                            <div class="p-2 border rounded cursor-pointer bg-payag-sand font-bold text-payag-wood">7 (W/E)</div>
+
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">8</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">9</div>
+                            <div class="p-2 border rounded cursor-pointer bg-red-200 text-red-700 font-bold" title="Blocked for Maintenance">10 (Blocked)</div>
+                            <div class="p-2 border rounded cursor-pointer bg-red-200 text-red-700 font-bold" title="Blocked for Maintenance">11 (Blocked)</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">12</div>
+                            <div class="p-2 border rounded cursor-pointer bg-payag-sand font-bold text-payag-wood">13 (W/E)</div>
+                            <div class="p-2 border rounded cursor-pointer bg-payag-sand font-bold text-payag-wood">14 (W/E)</div>
+
+                            <!-- Example Confirmed Booking -->
+                            <div class="p-2 border rounded bg-green-500 text-white font-bold cursor-default" title="Confirmed Booking">15 (Booked)</div>
+                            <div class="p-2 border rounded bg-green-500 text-white font-bold cursor-default" title="Confirmed Booking">16 (Booked)</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">17</div>
+                            <!-- Example Pending Booking -->
+                            <div class="p-2 border rounded bg-yellow-500 text-white font-bold cursor-default" title="Pending Payment">18 (Pending)</div>
+                            <div class="p-2 border rounded bg-yellow-500 text-white font-bold cursor-default" title="Pending Payment">19 (Pending)</div>
+                            <div class="p-2 border rounded cursor-pointer bg-payag-sand font-bold text-payag-wood">20 (W/E)</div>
+                            <div class="p-2 border rounded cursor-pointer bg-payag-sand font-bold text-payag-wood">21 (W/E)</div>
+
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">22</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">23</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">24</div>
+                            <div class="p-2 border rounded bg-green-500 text-white font-bold cursor-default" title="Confirmed Booking">25 (Booked)</div>
+                            <div class="p-2 border rounded bg-green-500 text-white font-bold cursor-default" title="Confirmed Booking">26 (Booked)</div>
+                            <div class="p-2 border rounded cursor-pointer bg-payag-sand font-bold text-payag-wood">27 (W/E)</div>
+                            <div class="p-2 border rounded cursor-pointer bg-payag-sand font-bold text-payag-wood">28 (W/E)</div>
+
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">29</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">30</div>
+                            <div class="p-2 border rounded cursor-pointer hover:bg-green-100">31</div>
+                            <div class="p-2 border rounded cursor-pointer bg-gray-200 text-gray-400">1</div>
+                            <div class="p-2 border rounded cursor-pointer bg-gray-200 text-gray-400">2</div>
+                            <div class="p-2 border rounded cursor-pointer bg-gray-200 text-gray-400">3</div>
+                            <div class="p-2 border rounded cursor-pointer bg-gray-200 text-gray-400">4</div>
+                        </div>
+                    </div>
+
+                    <!-- Date Blocking Form -->
+                    <form class="space-y-4">
+                        <h5 class="text-lg font-semibold text-payag-teal">Manually Block Out Dates</h5>
+                        <div>
+                            <label for="block-start" class="block text-sm font-medium text-gray-700">Start Date</label>
+                            <input type="date" id="block-start"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                        </div>
+                        <div>
+                            <label for="block-end" class="block text-sm font-medium text-gray-700">End Date</label>
+                            <input type="date" id="block-end"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                        </div>
+                        <div>
+                            <label for="block-reason" class="block text-sm font-medium text-gray-700">Reason for Block</label>
+                            <select id="block-reason"
+                                   class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-payag-teal focus:ring-payag-teal p-3">
+                                <option>Maintenance / Cleaning</option>
+                                <option>Owner Personal Use</option>
+                                <option>Holiday Closure</option>
+                            </select>
+                        </div>
+                        <button class="w-full bg-red-600 text-white py-2 rounded-full hover:bg-red-700 transition font-semibold">Block Dates</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

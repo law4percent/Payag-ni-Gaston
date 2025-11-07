@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Owner Dashboard | Payag ni Gaston</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">🏝️ Payag ni Gaston</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="book.html">Booking Page</a></li>
+        <li><a href="#" class="active">Dashboard</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Dashboard Section -->
+  <section class="dashboard">
+    <h1>Owner Dashboard</h1>
+    <p class="subtitle">Monitor and manage all reservation requests.</p>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="card">
+        <h2>12</h2>
+        <p>Pending Reservations</p>
+      </div>
+      <div class="card">
+        <h2>8</h2>
+        <p>Confirmed</p>
+      </div>
+      <div class="card">
+        <h2>24</h2>
+        <p>Total Bookings</p>
+      </div>
+    </div>
+
+    <!-- Booking Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Client Name</th>
+            <th>Contact</th>
+            <th>Check-in</th>
+            <th>Guests</th>
+            <th>Status</th>
+            <th>GCash Proof</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Juan Dela Cruz</td>
+            <td>+63 912 345 6789</td>
+            <td>Nov 10, 2025</td>
+            <td>12</td>
+            <td><span class="status pending">Pending</span></td>
+            <td><a href="#proof-modal" class="view-btn">View</a></td>
+            <td><a href="#confirm-modal" class="confirm-btn">Confirm</a></td>
+          </tr>
+          <tr>
+            <td>Maria Santos</td>
+            <td>+63 935 888 4433</td>
+            <td>Nov 12, 2025</td>
+            <td>8</td>
+            <td><span class="status confirmed">Confirmed</span></td>
+            <td><a href="#" class="view-btn">View</a></td>
+            <!-- <td><a href="#confirm-modal" class="confirm-btn">Confirm</a></td> -->
+            <td><a href="#complete-modal" class="complete-btn">Complete</a></td>
+          </tr>
+          <tr>
+            <td>John Reyes</td>
+            <td>+63 998 777 1234</td>
+            <td>Nov 15, 2025</td>
+            <td>15</td>
+            <td><span class="status completed">Completed</span></td>
+            <td><a href="#" class="view-btn">View</a></td>
+            <!-- <td><a href="#confirm-modal" class="confirm-btn">Confirm</a></td> -->
+            <td><a href="#complete-modal" class="complete-btn">Complete</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Modal (View Proof) -->
+    <div id="proof-modal" class="modal">
+        <div class="modal-content">
+            <a href="#" class="close-btn">&times;</a>
+            <h2>GCash Payment Proof</h2>
+            <img src="gcash_sample.jpg" alt="GCash Proof" class="proof-image">
+            <p><strong>Sender:</strong> Juan Dela Cruz</p>
+            <p><strong>Reference No:</strong> 1234567890</p>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content small">
+            <a href="#" class="close-btn">&times;</a>
+            <h2>Confirm Booking</h2>
+            <p>Are you sure you want to confirm this booking for <strong>Juan Dela Cruz</strong> on <strong>Nov 20, 2025</strong>?</p>
+
+            <div class="modal-buttons">
+            <a href="#" class="btn cancel">Cancel</a>
+            <a href="#" class="btn confirm">Confirm</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completed Modal -->
+    <div id="complete-modal" class="modal">
+        <div class="modal-content small">
+            <a href="#" class="close-btn">&times;</a>
+            <h2>Mark Booking as Completed</h2>
+            <p>Finalize this booking for <strong>Juan Dela Cruz</strong> on <strong>Nov 20–21, 2025</strong>?</p>
+
+            <form class="complete-form">
+            <label for="remarks">Remarks (optional):</label>
+            <textarea id="remarks" name="remarks" rows="3" placeholder="e.g. No issues, left early at 7:45 AM"></textarea>
+
+            <div class="modal-buttons">
+                <a href="#" class="btn cancel">Cancel</a>
+                <a href="#" class="btn complete">Complete</a>
+            </div>
+            </form>
+        </div>
+    </div>
+
+
+
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Payag ni Gaston Resort | Managed by the Owner</p>
+  </footer>
+
+</body>
+</html>
